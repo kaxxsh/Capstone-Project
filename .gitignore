@@ -1,0 +1,91 @@
+
+# .NET Core/Visual Studio - Generated using Co-Pilot
+# Build and package directories
+bin/
+obj/
+out/
+
+# Visual Studio files
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Visual Studio Code files
+.vscode/
+
+# JetBrains Rider IDE files
+.idea/
+
+# Code files
+*.csproj.user
+
+# Compiled files
+*.dll
+*.exe
+*.pdb
+*.out
+*.log
+
+# Temporary files
+*.tmp
+
+# Test results and coverage reports
+TestResults/
+.coverage
+*.coveragexml
+*.trx
+
+# NuGet packages
+packages/
+
+# Log files
+*.log
+Logs/
+
+# Visual Studio temporary files
+*.vs/
+*.bak
+
+# Application data files
+appsettings.Development.json
+appsettings.Production.json
+appsettings.json
+**/*appsettings.json
+
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
+# dependencies
+node_modules
+.pnp
+.pnp.js
+.yarn/install-state.gz
+
+# testing
+coverage
+
+# next.js
+.next/
+out/
+
+# production
+build
+
+# misc
+.DS_Store
+*.pem
+
+# debug
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# local env files
+.env*.local
+
+# vercel
+.vercel
+
+# typescript
+*.tsbuildinfo
+next-env.d.ts
