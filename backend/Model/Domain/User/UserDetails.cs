@@ -1,11 +1,11 @@
-﻿
-using backend.Model.Domain.Follow;
+﻿using backend.Model.Domain.Follow;
 using backend.Model.Domain.Notification;
 using backend.Model.Domain.Post;
+using Microsoft.AspNetCore.Identity;
 
 namespace backend.Model.Domain.User
 {
-    public class UserDetails
+    public class UserDetails : IdentityUser
     {
         public string Name { get; set; }
         public string Image { get; set; }
@@ -14,11 +14,11 @@ namespace backend.Model.Domain.User
         public DateOnly DateOfBirth { get; set; }
         public string Gender { get; set; }
 
-        public List<PostFeed> Posts { get; set; }
-        public ICollection<PostLike> PostLikes { get; set; }
-        public ICollection<PostComment> PostComments { get; set; }
-        public ICollection<UserFollow> Followers { get; set; }
-        public ICollection<UserFollow> Following { get; set; }
-        public ICollection<Notify> Notifies { get; set; }
+        public List<PostFeed> Posts { get; set; } = new List<PostFeed>();
+        public ICollection<PostLike> PostLikes { get; set; } = new List<PostLike>();
+        public ICollection<PostComment> PostComments { get; set; } = new List<PostComment>();
+        public ICollection<UserFollow> Followers { get; set; } = new List<UserFollow>();
+        public ICollection<UserFollow> Following { get; set; } = new List<UserFollow>();
+        public ICollection<Notify> Notifies { get; set; } = new List<Notify>();
     }
 }

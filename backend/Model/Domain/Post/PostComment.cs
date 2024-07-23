@@ -5,14 +5,14 @@ namespace backend.Model.Domain.Post
 {
     public class PostComment
     {
-        public Guid PostCommet { get; set; }
+        public Guid PostCommentId { get; set; }
         public string Content { get; set; }
         public DateTime DateCreated { get; set; }
         [ForeignKey("Post")]
         public Guid PostId { get; set; }
         public PostFeed Post { get; set; }
         [ForeignKey("User")]
-        public Guid UserId { get; set; }
+        public string UserId { get; set; }
         public UserDetails User { get; set; }
     }
 }

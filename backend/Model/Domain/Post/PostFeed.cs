@@ -1,11 +1,12 @@
 ﻿using backend.Model.Domain.User;
-using Microsoft.Identity.Client;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace backend.Model.Domain.Post
 {
     public class PostFeed
     {
+        [Key]
         public Guid PostId { get; set; }
         public string? Content { get; set; }
         public string? Image { get; set; }
@@ -18,7 +19,7 @@ namespace backend.Model.Domain.Post
         public string UserId { get; set; }
         public UserDetails User { get; set; }
 
-        public ICollection<PostLike> PostLikes { get; set; }
-        public ICollection<PostComment> PostComments { get; set; }
+        public ICollection<PostLike> PostLikes { get; set; } = new List<PostLike>();
+        public ICollection<PostComment> PostComments { get; set; } = new List<PostComment>();
     }
 }

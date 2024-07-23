@@ -11,7 +11,7 @@ namespace backend.Model.Domain.Notification
         public bool IsRead { get; set; }
 
         [ForeignKey("User")]
-        public Guid UserId { get; set; }
+        public string UserId { get; set; }
         public UserDetails User { get; set; }
     }
 }

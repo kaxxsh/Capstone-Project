@@ -8,11 +8,11 @@ namespace backend.Model.Domain.Follow
         public Guid Id { get; set; }
 
         [ForeignKey("FollowerUser")]
-        public Guid FollowerUserId { get; set; }
+        public string FollowerUserId { get; set; }
         public UserDetails FollowerUser { get; set; }
-        public Guid FollowedUserId { get; set; }
 
         [ForeignKey("FollowedUser")]
+        public string FollowedUserId { get; set; }
         public UserDetails FollowedUser { get; set; }
         public DateTime FollowDate { get; set; }
     }
