@@ -67,13 +67,26 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     });
 
 builder.Services.AddHttpContextAccessor();
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("CorsPolicy", policy =>
+    {
+        policy.AllowAnyHeader().AllowAnyMethod().WithOrigins("http://localhost:3000").AllowCredentials();
+    });
+});
+
+
 builder.Services.AddScoped<ITokenService, TokenService>();
-builder.Services.AddScoped<IAuthRepository, AuthRepository>();
 builder.Services.AddScoped<IAuthServices, AuthService>();
-builder.Services.AddScoped<IPostFeedRepository, FeedPostRepository>();
 builder.Services.AddScoped<IPostFeedServices, FeedPostService>();
-builder.Services.AddScoped<IPostLikeRepository, PostLikeRepository>();
 builder.Services.AddScoped<IPostLikeService, PostLikeService>();
+builder.Services.AddScoped<IPostCommendServices, PostCommendService>();
+
+
+builder.Services.AddScoped<IAuthRepository, AuthRepository>();
+builder.Services.AddScoped<IPostFeedRepository, FeedPostRepository>();
+builder.Services.AddScoped<IPostLikeRepository, PostLikeRepository>();
+builder.Services.AddScoped<IPostCommendRepository, PostCommendRepository>();
 
 var app = builder.Build();
 

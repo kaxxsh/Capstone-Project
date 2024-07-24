@@ -2,6 +2,7 @@
 using backend.Model.Domain.Post;
 using backend.Model.Domain.User;
 using backend.Model.Dtos.PostFeed;
+using backend.Model.Dtos.PostFeed.CommentPost;
 using backend.Model.Dtos.User;
 
 namespace backend.Mapping
@@ -16,6 +17,8 @@ namespace backend.Mapping
             CreateMap<PostFeedRequestDto, PostFeed>().ReverseMap();
             CreateMap<PostLike,PostFeedRequestDto>().ReverseMap();
             CreateMap<PostLike,PostFeedResponseDto>().ReverseMap();
+            CreateMap<PostComment, PostCommentResponseDto>().ReverseMap();
+            CreateMap<PostCommentRequestDto, PostComment>().ReverseMap();
         }
     }
 }
