@@ -463,7 +463,7 @@ namespace backend.Migrations
                     b.HasOne("backend.Model.Domain.User.UserDetails", "User")
                         .WithMany("Notifies")
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("User");

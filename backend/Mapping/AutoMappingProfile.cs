@@ -13,7 +13,9 @@ namespace backend.Mapping
             CreateMap<UserDetails, UserResponseDto>().ReverseMap();
             CreateMap<UserDetails, UserRequestDto>().ReverseMap();
             CreateMap<PostFeed, PostFeedResponseDto>().ReverseMap();
-            CreateMap<PostFeedRequestDto, PostFeed>();
+            CreateMap<PostFeedRequestDto, PostFeed>().ReverseMap();
+            CreateMap<PostLike,PostFeedRequestDto>().ReverseMap();
+            CreateMap<PostLike,PostFeedResponseDto>().ReverseMap();
         }
     }
 }

@@ -72,6 +72,8 @@ builder.Services.AddScoped<IAuthRepository, AuthRepository>();
 builder.Services.AddScoped<IAuthServices, AuthService>();
 builder.Services.AddScoped<IPostFeedRepository, FeedPostRepository>();
 builder.Services.AddScoped<IPostFeedServices, FeedPostService>();
+builder.Services.AddScoped<IPostLikeRepository, PostLikeRepository>();
+builder.Services.AddScoped<IPostLikeService, PostLikeService>();
 
 var app = builder.Build();
 

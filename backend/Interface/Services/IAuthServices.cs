@@ -1,6 +1,5 @@
 ﻿using backend.Model.Dtos.Auth;
 using backend.Model.Dtos.User;
-using System.Threading.Tasks;
 
 namespace backend.Interface.Services
 {

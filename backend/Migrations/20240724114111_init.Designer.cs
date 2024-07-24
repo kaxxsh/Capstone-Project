@@ -12,7 +12,7 @@ using backend.Context;
 namespace backend.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240723093148_init")]
+    [Migration("20240724114111_init")]
     partial class init
     {
         /// <inheritdoc />
@@ -466,7 +466,7 @@ namespace backend.Migrations
                     b.HasOne("backend.Model.Domain.User.UserDetails", "User")
                         .WithMany("Notifies")
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("User");
