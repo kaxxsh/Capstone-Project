@@ -1,17 +1,26 @@
-﻿using backend.Interface.Repository;
+﻿using AutoMapper;
+using backend.Interface.Repository;
 using backend.Interface.Services;
 using backend.Model.Dtos.Auth;
 using backend.Model.Dtos.User;
+using Microsoft.AspNetCore.Http;
+using System.Threading.Tasks;
 
 namespace backend.Services
 {
     public class AuthService : IAuthServices
     {
         private readonly IAuthRepository _authRepository;
+        private readonly IMapper _mapper;
+        private readonly ITokenService _tokenService;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public AuthService(IAuthRepository authRepository)
+        public AuthService(IAuthRepository authRepository, IMapper mapper, ITokenService tokenService, IHttpContextAccessor httpContextAccessor)
         {
             _authRepository = authRepository;
+            _mapper = mapper;
+            _tokenService = tokenService;
+            _httpContextAccessor = httpContextAccessor;
         }
 
         public async Task<UserResponseDto> LoginAsync(LoginRequestDto loginRequestDto)
@@ -22,17 +31,11 @@ namespace backend.Services
                 return null;
             }
 
-            return new UserResponseDto
-            {
-                UserName = user.UserName,
-                Name = user.Name,
-                ProfileImage = user.ProfileImage,
-                Bio = user.Bio,
-                Location = user.Location,
-                DateOfBirth = user.DateOfBirth,
-                JoinDate = user.JoinDate,
-                Gender = user.Gender
-            };
+            var token = _tokenService.CreateToken(user);
+
+            SetTokenCookie(token);
+
+            return _mapper.Map<UserResponseDto>(user);
         }
 
         public async Task<UserResponseDto> RegisterAsync(RegisterRequestDto registerRequestDto)
@@ -40,20 +43,28 @@ namespace backend.Services
             var user = await _authRepository.Register(registerRequestDto);
             if (user == null)
             {
+                // Handle registration failure
                 return null;
             }
 
-            return new UserResponseDto
+            var token = _tokenService.CreateToken(user);
+
+            SetTokenCookie(token);
+
+            return _mapper.Map<UserResponseDto>(user);
+        }
+
+        private void SetTokenCookie(string token)
+        {
+            var cookieOptions = new CookieOptions
             {
-                UserName = user.UserName,
-                Name = user.Name,
-                ProfileImage = user.ProfileImage,
-                Bio = user.Bio,
-                Location = user.Location,
-                DateOfBirth = user.DateOfBirth,
-                JoinDate = user.JoinDate,
-                Gender = user.Gender
+                HttpOnly = true,
+                Expires = DateTime.UtcNow.AddHours(1),
+                Secure = true, // Ensure this is true in production to use HTTPS
+                SameSite = SameSiteMode.Strict
             };
+
+            _httpContextAccessor.HttpContext.Response.Cookies.Append("jwt", token, cookieOptions);
         }
     }
 }

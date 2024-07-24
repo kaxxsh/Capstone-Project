@@ -42,15 +42,15 @@ namespace backend.Context
                 .OnDelete(DeleteBehavior.Restrict);
 
             builder.Entity<PostComment>()
-                .HasOne(pl => pl.Post)
+                .HasOne(pc => pc.Post)
                 .WithMany(p => p.PostComments)
-                .HasForeignKey(pl => pl.PostId)
+                .HasForeignKey(pc => pc.PostId)
                 .OnDelete(DeleteBehavior.Cascade);
 
             builder.Entity<PostComment>()
-                .HasOne(pl => pl.User)
+                .HasOne(pc => pc.User)
                 .WithMany(u => u.PostComments)
-                .HasForeignKey(pl => pl.UserId)
+                .HasForeignKey(pc => pc.UserId)
                 .OnDelete(DeleteBehavior.Restrict);
 
             builder.Entity<Notify>()
@@ -58,12 +58,6 @@ namespace backend.Context
                 .WithMany(u => u.Notifies)
                 .HasForeignKey(n => n.UserId)
                 .OnDelete(DeleteBehavior.Cascade);
-
-            builder.Entity<Notify>()
-                .HasOne(n => n.User)
-                .WithMany(u => u.Notifies)
-                .HasForeignKey(n => n.UserId)
-                .OnDelete(DeleteBehavior.Restrict);
 
             builder.Entity<UserFollow>()
                 .HasOne(uf => uf.FollowerUser)
