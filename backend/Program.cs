@@ -1,5 +1,9 @@
 using backend.Context;
+using backend.Interface.Repository;
+using backend.Interface.Services;
 using backend.Model.Domain.User;
+using backend.Repository;
+using backend.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
@@ -29,6 +33,8 @@ builder.Services.AddIdentity<UserDetails, IdentityRole>()
     .AddEntityFrameworkStores<ApplicationDbContext>()
     .AddDefaultTokenProviders();
 
+builder.Services.AddScoped<IAuthRepository, AuthRepository>();
+builder.Services.AddScoped<IAuthServices, AuthService>();
 
 var app = builder.Build();
 

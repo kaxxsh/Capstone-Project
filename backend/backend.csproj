@@ -22,14 +22,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Controllers\" />
-    <Folder Include="Interface\Services\" />
     <Folder Include="Mapping\" />
-    <Folder Include="Model\Dtos\" />
     <Folder Include="Model\Enum\" />
     <Folder Include="Model\Error\" />
-    <Folder Include="Repository\" />
-    <Folder Include="Services\" />
   </ItemGroup>
 
 </Project>

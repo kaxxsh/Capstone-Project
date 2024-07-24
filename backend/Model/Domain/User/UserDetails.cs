@@ -2,16 +2,19 @@
 using backend.Model.Domain.Notification;
 using backend.Model.Domain.Post;
 using Microsoft.AspNetCore.Identity;
+using System;
+using System.Collections.Generic;
 
 namespace backend.Model.Domain.User
 {
     public class UserDetails : IdentityUser
     {
         public string Name { get; set; }
-        public string Image { get; set; }
+        public string ProfileImage { get; set; }
         public string Bio { get; set; }
         public string Location { get; set; }
         public DateOnly DateOfBirth { get; set; }
+        public DateTime JoinDate { get; set; } = DateTime.Now;
         public string Gender { get; set; }
 
         public List<PostFeed> Posts { get; set; } = new List<PostFeed>();
