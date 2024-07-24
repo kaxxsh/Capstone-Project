@@ -26,6 +26,9 @@ namespace backend.Repository
             {
                 await context.Comments.AddAsync(entity);
                 await context.SaveChangesAsync();
+                var post = await context.Posts.FindAsync(entity.PostId);
+                post.CommentsCount++;
+                await context.SaveChangesAsync();
                 return entity;
             }
             catch (Exception ex)
@@ -44,6 +47,9 @@ namespace backend.Repository
                     throw new Exception("Post Comment not found.");
                 }
                 context.Comments.Remove(postComment);
+                await context.SaveChangesAsync();
+                var post = await context.Posts.FindAsync(postComment.PostId);
+                post.CommentsCount--;
                 await context.SaveChangesAsync();
                 return postComment;
             }

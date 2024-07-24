@@ -1,8 +1,6 @@
 ﻿using backend.Interface.Services;
 using backend.Model.Dtos.PostFeed.CommentPost;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Threading.Tasks;
 
 namespace backend.Controllers
 {
@@ -23,7 +21,11 @@ namespace backend.Controllers
             try
             {
                 var result = await services.AddPostCommendAsync(postComment);
-                return Ok(result);
+                if (result == null)
+                {
+                    return BadRequest("Post not found.");
+                }
+                return Ok("Comment Success");
             }
             catch (Exception ex)
             {
@@ -37,7 +39,11 @@ namespace backend.Controllers
             try
             {
                 var result = await services.UpdatePostCommendAsync(PostCommentId, postComment);
-                return Ok(result);
+                if (result == null)
+                {
+                    return BadRequest("Post not found.");
+                }
+                return Ok("Comment Updated");
             }
             catch (Exception ex)
             {
@@ -51,7 +57,11 @@ namespace backend.Controllers
             try
             {
                 var result = await services.DeletePostCommendAsync(PostCommentId);
-                return Ok(result);
+                if (result == null)
+                {
+                    return BadRequest("Post not found.");
+                }
+                return Ok("Comment Deleted");
             }
             catch (Exception ex)
             {
