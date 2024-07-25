@@ -15,6 +15,8 @@ namespace backend.Mapping
     {
         public AutoMappingProfile()
         {
+            CreateMap<UserDetails, UserDto>().ReverseMap();
+
             CreateMap<UserDetails, UserResponseDto>().ReverseMap();
             CreateMap<UserDetails, UserRequestDto>().ReverseMap();
             CreateMap<PostFeed, PostFeedResponseDto>()

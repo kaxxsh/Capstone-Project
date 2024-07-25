@@ -36,7 +36,6 @@ namespace backend.Services
             {
                 var jwtToken = httpContextAccessor.HttpContext.Request.Cookies["jwt"];
                 if (jwtToken == null) throw new Exception("JWT token not found.");
-
                 var handler = new JwtSecurityTokenHandler();
                 var token = handler.ReadJwtToken(jwtToken);
                 var userId = token.Claims.FirstOrDefault(c => c.Type == "nameid")?.Value;
