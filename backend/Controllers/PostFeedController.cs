@@ -20,7 +20,7 @@ namespace backend.Controllers
         [HttpGet]
         public async Task<IActionResult> GetPostsAsync()
         {
-            var posts = await _services.GetPostsAsync();
+            var posts = await _services.GetAllPostsAsync();
             return Ok(posts);
         }
 
@@ -63,6 +63,17 @@ namespace backend.Controllers
         {
             var result = await _services.DeletePostAsync(postId);
             return result ? NoContent() : NotFound();
+        }
+
+        [HttpGet("GetPostByUser{UserID}")]
+        public async Task<IActionResult> GetPostByUserAsync(string UserID)
+        {
+            var post = await _services.GetUserPostsAndRetweets(UserID);
+            if (post == null)
+            {
+                return BadRequest();
+            }
+            return Ok(post);
         }
     }
 }

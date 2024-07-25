@@ -1,13 +1,7 @@
-﻿using Azure.Identity;
-using backend.Context;
+﻿using backend.Context;
 using backend.Interface.Repository;
 using backend.Model.Domain.Post;
-using backend.Model.Dtos.PostFeed.CommentPost;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace backend.Repository
 {

@@ -3,6 +3,10 @@ using backend.Interface.Repository;
 using backend.Interface.Services;
 using backend.Model.Domain.Post;
 using backend.Model.Dtos.PostFeed;
+using backend.Model.Dtos.PostFeed.CommentPost;
+using backend.Model.Dtos.PostFeed.LikePost;
+using backend.Model.Dtos.PostFeed.RetweetPost;
+using Microsoft.Extensions.Hosting;
 using System.IdentityModel.Tokens.Jwt;
 namespace backend.Services
 {
@@ -58,13 +62,13 @@ namespace backend.Services
             return _mapper.Map<PostFeedResponseDto>(post);
         }
 
-        public async Task<IEnumerable<PostFeedResponseDto>> GetPostsAsync()
+        public async Task<IEnumerable<PostFeedResponseDto>> GetAllPostsAsync()
         {
             var posts = await _repository.GetAll();
             var sortedPosts = posts.OrderByDescending(post => post.DateUpdated);
             return _mapper.Map<IEnumerable<PostFeedResponseDto>>(sortedPosts);
+            
         }
-
 
         public async Task<PostFeedResponseDto> UpdatePostAsync(Guid postId, PostFeedRequestDto postFeedRequestDto)
         {
@@ -81,5 +85,33 @@ namespace backend.Services
             var result = await _repository.Update(postId, post);
             return _mapper.Map<PostFeedResponseDto>(result);
         }
+
+        public async Task<List<CombinedPostViewModel>> GetUserPostsAndRetweets(string userId)
+        {
+            var originalPosts = await _repository.GetPostsByUserAsync(userId);
+            var originalPostViewModels = originalPosts.Select(post => new CombinedPostViewModel
+            {
+                Post = _mapper.Map<PostFeedResponseDto>(post),
+                IsRetweet = false,
+                RetweetContent = null,
+                RetweetedBy = null
+            }).ToList();
+
+            var retweetedPosts = await _repository.GetRetweetsByUserAsync(userId);
+            var retweetPostViewModels = retweetedPosts.Select(retweet => new CombinedPostViewModel
+            {
+                Post = _mapper.Map<PostFeedResponseDto>(retweet.PostFeed),
+                IsRetweet = true,
+                RetweetContent = retweet.RetweetContent,
+                RetweetedBy = retweet.User
+            }).ToList();
+
+            var allPosts = originalPostViewModels.Concat(retweetPostViewModels)
+                                                 .OrderByDescending(p => p.Post.DateCreated)
+                                                 .ToList();
+
+            return allPosts;
+        }
+
     }
 }

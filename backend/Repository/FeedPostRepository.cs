@@ -2,9 +2,6 @@
 using backend.Interface.Repository;
 using backend.Model.Domain.Post;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace backend.Repository
 {
@@ -39,12 +36,22 @@ namespace backend.Repository
 
         public async Task<IEnumerable<PostFeed>> GetAll()
         {
-            return await _context.Posts.Include(p => p.User).ToListAsync();
+            return await _context.Posts
+                .Include(p => p.User)
+                .Include(p => p.PostComments)
+                .Include(p => p.PostLikes)
+                .Include(p => p.PostRetweets)
+                .ToListAsync();
         }
 
         public async Task<PostFeed> GetById(Guid id)
         {
-            return await _context.Posts.Include(p => p.User).FirstOrDefaultAsync(p => p.PostId == id);
+            return await _context.Posts
+                .Include(p => p.User)
+                .Include(p => p.PostComments)
+                .Include(p => p.PostLikes)
+                .Include(p => p.PostRetweets)
+                .FirstOrDefaultAsync(p => p.PostId == id);
         }
 
         public async Task<PostFeed> Update(Guid id, PostFeed entity)
@@ -62,5 +69,25 @@ namespace backend.Repository
             await _context.SaveChangesAsync();
             return post;
         }
+
+        public async Task<IEnumerable<PostFeed>> GetPostsByUserAsync(string userId)
+        {
+            return await _context.Posts
+                .Where(p => p.UserId == userId)
+                .Include(p => p.User)
+                .Include(p => p.PostComments)
+                .ToListAsync();
+        }
+
+        public async Task<IEnumerable<PostRetweet>> GetRetweetsByUserAsync(string userId)
+        {
+            return await _context.Retweets
+                .Where(r => r.UserId == userId)
+                .Include(r => r.PostFeed)
+                    .ThenInclude(pf => pf.User)
+                .Include(r => r.PostFeed.PostComments)
+                .ToListAsync();
+        }
+
     }
 }

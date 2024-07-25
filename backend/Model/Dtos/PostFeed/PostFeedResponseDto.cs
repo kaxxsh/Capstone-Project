@@ -1,5 +1,8 @@
 ﻿using backend.Model.Domain.Post;
 using backend.Model.Domain.User;
+using backend.Model.Dtos.PostFeed.CommentPost;
+using backend.Model.Dtos.PostFeed.LikePost;
+using backend.Model.Dtos.PostFeed.RetweetPost;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace backend.Model.Dtos.PostFeed
@@ -14,6 +17,8 @@ namespace backend.Model.Dtos.PostFeed
         public int LikesCount { get; set; }
         public int CommentsCount { get; set; }
         public int RetweetsCount { get; set; }
-        public ICollection<PostComment> PostComments { get; set; } = new List<PostComment>();
+        public ICollection<PostCommentResponseDto> PostComments { get; set; }
+        public ICollection<LikePostResponseDto> PostLikes { get; set; }
+        public ICollection<PostRetweetDto> PostRetweets { get; set; }
     }
 }

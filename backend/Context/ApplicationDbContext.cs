@@ -17,6 +17,7 @@ namespace backend.Context
         public DbSet<PostFeed> Posts { get; set; }
         public DbSet<PostLike> Likes { get; set; }
         public DbSet<PostComment> Comments { get; set; }
+        public DbSet<PostRetweet> Retweets { get; set; }
         public DbSet<Notify> Notifies { get; set; }
         public DbSet<UserFollow> UserFollows { get; set; }
 
@@ -53,6 +54,18 @@ namespace backend.Context
                 .HasForeignKey(pc => pc.UserId)
                 .OnDelete(DeleteBehavior.Restrict);
 
+            builder.Entity<PostRetweet>()
+                .HasOne(pr => pr.PostFeed)
+                .WithMany(p => p.PostRetweets)
+                .HasForeignKey(pr => pr.PostId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            builder.Entity<PostRetweet>()
+                .HasOne(pr => pr.User)
+                .WithMany(u => u.PostRetweets)
+                .HasForeignKey(pr => pr.UserId)
+                .OnDelete(DeleteBehavior.Restrict);
+
             builder.Entity<Notify>()
                 .HasOne(n => n.User)
                 .WithMany(u => u.Notifies)
@@ -70,6 +83,7 @@ namespace backend.Context
                 .WithMany(u => u.Followers)
                 .HasForeignKey(uf => uf.FollowedUserId)
                 .OnDelete(DeleteBehavior.Restrict);
+
         }
     }
 }

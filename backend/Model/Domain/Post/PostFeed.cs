@@ -24,5 +24,6 @@ namespace backend.Model.Domain.Post
 
         public ICollection<PostLike> PostLikes { get; set; } = new List<PostLike>();
         public ICollection<PostComment> PostComments { get; set; } = new List<PostComment>();
+        public ICollection<PostRetweet> PostRetweets { get; set; } = new List<PostRetweet>();
     }
 }

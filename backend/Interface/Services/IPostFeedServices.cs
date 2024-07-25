@@ -6,8 +6,9 @@ namespace backend.Interface.Services
     {
         Task<PostFeedResponseDto> CreatePostAsync(PostFeedRequestDto postFeedRequestDto);
         Task<PostFeedResponseDto> GetPostAsync(Guid postId);
-        Task<IEnumerable<PostFeedResponseDto>> GetPostsAsync();
+        Task<IEnumerable<PostFeedResponseDto>> GetAllPostsAsync();
         Task<PostFeedResponseDto> UpdatePostAsync(Guid postId, PostFeedRequestDto postFeedRequestDto);
         Task<bool> DeletePostAsync(Guid postId);
+        Task<List<CombinedPostViewModel>> GetUserPostsAndRetweets(string userId);
     }
 }
