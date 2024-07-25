@@ -82,6 +82,7 @@ builder.Services.AddScoped<IPostFeedServices, FeedPostService>();
 builder.Services.AddScoped<IPostLikeService, PostLikeService>();
 builder.Services.AddScoped<IPostCommendServices, PostCommendService>();
 builder.Services.AddScoped<IPostRetweetServices, PostRetweetService>();
+builder.Services.AddScoped<IUserFollowService, UserFollowService>();
 
 
 
@@ -90,6 +91,7 @@ builder.Services.AddScoped<IPostFeedRepository, FeedPostRepository>();
 builder.Services.AddScoped<IPostLikeRepository, PostLikeRepository>();
 builder.Services.AddScoped<IPostCommendRepository, PostCommendRepository>();
 builder.Services.AddScoped<IPostRetweetRepository, PostRetweetRepository>();
+builder.Services.AddScoped<IUserFollowRepository, UserFollowRepository>();
 
 var app = builder.Build();
 

@@ -13,10 +13,11 @@ namespace backend.Model.Domain.User
         public string ProfileImage { get; set; }
         public string Bio { get; set; }
         public string Location { get; set; }
+        public int FollowersCount { get; set; }
+        public int FollowingCount {  get; set; }
         public DateOnly DateOfBirth { get; set; }
         public DateTime JoinDate { get; set; } = DateTime.Now;
         public string Gender { get; set; }
-
         public List<PostFeed> Posts { get; set; } = new List<PostFeed>();
         public ICollection<PostLike> PostLikes { get; set; } = new List<PostLike>();
         public ICollection<PostComment> PostComments { get; set; } = new List<PostComment>();
