@@ -143,7 +143,7 @@ namespace backend.Services
                     Post = _mapper.Map<PostFeedResponseDto>(retweet.PostFeed),
                     IsRetweet = true,
                     RetweetContent = retweet.RetweetContent,
-                    RetweetedBy = retweet.User
+                    RetweetedBy = retweet.User.UserName
                 }).ToList();
 
                 var allPosts = originalPostViewModels.Concat(retweetPostViewModels)

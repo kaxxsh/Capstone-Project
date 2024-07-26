@@ -2,9 +2,6 @@
 using backend.Interface.Repository;
 using backend.Model.Domain.Notification;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace backend.Repository
 {
@@ -37,6 +34,7 @@ namespace backend.Repository
                 .Include(n => n.FromUser)
                 .Include(n => n.User)
                 .Where(n => n.UserId == userId)
+                .OrderByDescending(n => n.DateCreated)
                 .ToListAsync();
         }
 

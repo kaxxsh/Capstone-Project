@@ -70,6 +70,7 @@ namespace backend.Repository
                 .Include(p => p.PostComments)
                 .Include(p => p.PostLikes)
                 .Include(p => p.PostRetweets)
+                    .ThenInclude(pr => pr.User)
                 .FirstOrDefaultAsync(p => p.PostId == id);
         }
 
@@ -111,6 +112,10 @@ namespace backend.Repository
                 .Include(r => r.PostFeed)
                     .ThenInclude(pf => pf.User)
                 .Include(r => r.PostFeed.PostComments)
+                    .ThenInclude(pc => pc.User)
+                .Include(r => r.PostFeed.PostLikes)
+                    .ThenInclude(pl => pl.User)
+                .Include(userId => userId.User)
                 .ToListAsync();
         }
 

@@ -7,6 +7,6 @@ namespace backend.Model.Dtos.PostFeed
         public PostFeedResponseDto Post { get; set; }
         public bool IsRetweet { get; set; }
         public string? RetweetContent { get; set; }
-        public UserDetails RetweetedBy { get; set; }
+        public string RetweetedBy { get; set; }
     }
 }

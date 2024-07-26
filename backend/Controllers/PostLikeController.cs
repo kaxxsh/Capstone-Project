@@ -29,7 +29,6 @@ namespace backend.Controllers
             }
             catch (Exception e)
             {
-                // Log the exception (optional)
                 return StatusCode(StatusCodes.Status500InternalServerError, "An error occurred while retrieving likes.");
             }
         }
@@ -48,8 +47,7 @@ namespace backend.Controllers
             }
             catch (Exception e)
             {
-                // Log the exception (optional)
-                return StatusCode(StatusCodes.Status500InternalServerError, "An error occurred while liking the post.");
+                return StatusCode(StatusCodes.Status500InternalServerError, "Incorrect Post Id");
             }
         }
     }
