@@ -2,6 +2,7 @@
 using backend.Interface.Repository;
 using backend.Interface.Services;
 using backend.Model.Dtos.Auth;
+using backend.Model.Dtos.Notify;
 using backend.Model.Dtos.User;
 using Microsoft.AspNetCore.Http;
 using System.Threading.Tasks;
@@ -14,13 +15,15 @@ namespace backend.Services
         private readonly IMapper _mapper;
         private readonly ITokenService _tokenService;
         private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly INotifyServices _notify;
 
-        public AuthService(IAuthRepository authRepository, IMapper mapper, ITokenService tokenService, IHttpContextAccessor httpContextAccessor)
+        public AuthService(IAuthRepository authRepository, IMapper mapper, ITokenService tokenService, IHttpContextAccessor httpContextAccessor, INotifyServices notify)
         {
             _authRepository = authRepository;
             _mapper = mapper;
             _tokenService = tokenService;
             _httpContextAccessor = httpContextAccessor;
+            _notify = notify;
         }
 
         public async Task<UserResponseDto> LoginAsync(LoginRequestDto loginRequestDto)
@@ -34,7 +37,6 @@ namespace backend.Services
             var token = _tokenService.CreateToken(user);
 
             SetTokenCookie(token);
-
             return _mapper.Map<UserResponseDto>(user);
         }
 

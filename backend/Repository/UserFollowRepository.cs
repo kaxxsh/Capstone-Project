@@ -47,13 +47,20 @@ namespace backend.Repository
                 await _context.SaveChangesAsync();
             }
 
-            var notification = new NotifyRequestDto
+            var notification1 = new NotifyRequestDto
             {
                 UserId = followedId,
-                Content = $"{follower.UserName} followed you",
+                Content = $"You Are Following {follower.UserName}",
             };
 
-            await _notify.CreateNotificationAsync(notification);
+            var notification2 = new NotifyRequestDto
+            {
+                UserId = follower.Id,
+                Content = $"You Are Following {followedUser.UserName}",
+            };
+
+            await _notify.CreateNotificationAsync(notification1);
+            await _notify.CreateNotificationAsync(notification2);
 
             return userFollow;
         }
@@ -120,26 +127,38 @@ namespace backend.Repository
                 _context.UserFollows.Remove(userFollow);
                 await _context.SaveChangesAsync();
 
-                follower.FollowingCount--;
+                if (follower.FollowingCount > 0)
+                {
+                    follower.FollowingCount--;
+                }
                 await _context.SaveChangesAsync();
 
                 var followedUser = await _context.Users.SingleOrDefaultAsync(u => u.Id == followedId);
-                if (followedUser != null)
+                if (followedUser != null && followedUser.FollowersCount > 0)
                 {
                     followedUser.FollowersCount--;
                     await _context.SaveChangesAsync();
                 }
+
+                var notification1 = new NotifyRequestDto
+                {
+                    UserId = followedId,
+                    Content = $"You have Unfollowed {follower.UserName}",
+                };
+                var notification2 = new NotifyRequestDto
+                {
+                    UserId = follower.Id,
+                    Content = $"You have Unfollowed {followedUser.UserName}",
+                };
+
+                await _notify.CreateNotificationAsync(notification1);
+                await _notify.CreateNotificationAsync(notification2);
+
+                return userFollow;
             }
 
-            var notification = new NotifyRequestDto
-            {
-                UserId = followedId,
-                Content = $"{follower.UserName} unfollowed you",
-            };
-
-            await _notify.CreateNotificationAsync(notification);
-
-            return userFollow;
+            return null;
         }
+
     }
 }

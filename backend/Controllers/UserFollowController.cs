@@ -17,6 +17,11 @@ namespace backend.Controllers
         [HttpPost("follow/{followerName}")]
         public async Task<IActionResult> FollowUser(string followerName)
         {
+            var validate = await service.IsFollowingAsync(followerName);
+            if (validate == true)
+            {
+                return BadRequest("User is already in Following List");
+            }
             var result = await service.FollowUserAsync(followerName);
             if (result == true)
             {

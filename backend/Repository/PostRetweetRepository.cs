@@ -96,7 +96,9 @@ namespace backend.Repository
                 return await context.Retweets
                     .Include(x => x.PostFeed)
                     .Include(x => x.PostFeed.PostLikes)
+                    .ThenInclude(x => x.User)
                     .Include(x => x.PostFeed.PostComments)
+                    .ThenInclude(x => x.User)
                     .Include(x => x.User)
                     .OrderByDescending(x => x.RetweetDate)
                     .FirstOrDefaultAsync(x => x.RetweetId == id);
@@ -120,7 +122,9 @@ namespace backend.Repository
                 var result = await context.Retweets
                     .Include(x => x.PostFeed)
                     .Include(x => x.PostFeed.PostLikes)
+                    .ThenInclude(x => x.User)
                     .Include(x => x.PostFeed.PostComments)
+                    .ThenInclude(x => x.User)
                     .Include(x => x.User)
                     .Where(x => x.PostId == postId)
                     .OrderByDescending(x => x.RetweetDate)
@@ -145,7 +149,9 @@ namespace backend.Repository
                 var result = await context.Retweets
                     .Include(x => x.PostFeed)
                     .Include(x => x.PostFeed.PostLikes)
+                    .ThenInclude(x => x.User)
                     .Include(x => x.PostFeed.PostComments)
+                    .ThenInclude(x => x.User)
                     .Include(x => x.User)
                     .Where(x => x.UserId == userId)
                     .OrderByDescending(x => x.RetweetDate)

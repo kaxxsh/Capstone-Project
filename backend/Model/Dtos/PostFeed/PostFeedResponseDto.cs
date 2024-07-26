@@ -17,6 +17,7 @@ namespace backend.Model.Dtos.PostFeed
         public int LikesCount { get; set; }
         public int CommentsCount { get; set; }
         public int RetweetsCount { get; set; }
+        public string UserId { get; set; }
         public ICollection<PostCommentResponseDto> PostComments { get; set; }
         public ICollection<LikePostResponseDto> PostLikes { get; set; }
         public ICollection<PostRetweetDto> PostRetweets { get; set; }

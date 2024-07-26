@@ -113,19 +113,15 @@ namespace backend.Services
 
                 if (string.IsNullOrEmpty(userId))
                 {
-                    throw new Exception("User is not authenticated or Logined User.");
+                    throw new Exception("User is not authenticated or logged in.");
                 }
 
                 var result = await repository.UnfollowUser(followerName, userId);
-                if (result != null)
-                {
-                    return true;
-                }
-                return false;
+                return result != null;
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                return false;
+                return false; 
             }
         }
 

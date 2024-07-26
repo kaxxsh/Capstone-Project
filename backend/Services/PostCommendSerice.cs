@@ -48,7 +48,6 @@ namespace backend.Services
             }
             catch (Exception ex)
             {
-                // Log the exception
                 throw new Exception("An error occurred while adding the comment.", ex);
             }
         }

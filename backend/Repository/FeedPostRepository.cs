@@ -59,6 +59,7 @@ namespace backend.Repository
                 .Include(p => p.PostComments)
                 .Include(p => p.PostLikes)
                 .Include(p => p.PostRetweets)
+                    .ThenInclude(pr => pr.User)
                 .ToListAsync();
         }
 

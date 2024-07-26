@@ -2,9 +2,6 @@
 using backend.Model.Dtos.Auth;
 using backend.Model.Domain.User;
 using Microsoft.AspNetCore.Identity;
-using System.Threading.Tasks;
-using backend.Interface.Services;
-using backend.Model.Dtos.Notify;
 
 namespace backend.Repository
 {
@@ -12,13 +9,11 @@ namespace backend.Repository
     {
         private readonly UserManager<UserDetails> _userManager;
         private readonly SignInManager<UserDetails> _signInManager;
-        private readonly INotifyServices _notify;
 
-        public AuthRepository(UserManager<UserDetails> userManager, SignInManager<UserDetails> signInManager, INotifyServices notify)
+        public AuthRepository(UserManager<UserDetails> userManager, SignInManager<UserDetails> signInManager)
         {
             _userManager = userManager;
             _signInManager = signInManager;
-            _notify = notify;
         }
 
         public async Task<UserDetails> Login(LoginRequestDto loginRequestDto)
@@ -27,14 +22,6 @@ namespace backend.Repository
             if (user != null && await _userManager.CheckPasswordAsync(user, loginRequestDto.Password))
             {
                 await _signInManager.SignInAsync(user, isPersistent: false);
-
-                var notification = new NotifyRequestDto
-                {
-                    UserId = user.Id,
-                    Content = $"New Login Found",
-                };
-
-                await _notify.CreateNotificationAsync(notification);
                 return user;
             }
 

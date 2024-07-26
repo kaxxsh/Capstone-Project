@@ -39,7 +39,6 @@ namespace backend.Repository
             }
             catch (Exception e)
             {
-                // Log the exception (optional)
                 throw new Exception("An error occurred while retrieving likes for the post.");
             }
         }
@@ -66,6 +65,7 @@ namespace backend.Repository
                         UserId = post.UserId,
                         Content = "You unliked a post."
                     };
+                    await services.CreateNotificationAsync(notification);
 
                     return null;
                 }
@@ -86,6 +86,7 @@ namespace backend.Repository
                     Content = "You liked a post."
                 };
 
+                await services.CreateNotificationAsync(notificationDto);
                 return postLike;
             }
             catch (Exception e)

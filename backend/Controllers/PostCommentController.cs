@@ -6,17 +6,17 @@ namespace backend.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class PostCommendController : ControllerBase
+    public class PostCommentController : ControllerBase
     {
         private readonly IPostCommendServices services;
 
-        public PostCommendController(IPostCommendServices services)
+        public PostCommentController(IPostCommendServices services)
         {
             this.services = services;
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddPostCommendAsync([FromBody] PostCommentRequestDto postComment)
+        public async Task<IActionResult> AddPostCommentAsync([FromBody] PostCommentRequestDto postComment)
         {
             try
             {
@@ -34,7 +34,7 @@ namespace backend.Controllers
         }
 
         [HttpPut("{PostCommentId}")]
-        public async Task<IActionResult> UpdatePostCommendAsync([FromBody] PostCommentRequestDto postComment, Guid PostCommentId)
+        public async Task<IActionResult> UpdatePostCommentAsync([FromBody] PostCommentRequestDto postComment, Guid PostCommentId)
         {
             try
             {
@@ -52,7 +52,7 @@ namespace backend.Controllers
         }
 
         [HttpDelete("{PostCommentId}")]
-        public async Task<IActionResult> DeletePostCommendAsync(Guid PostCommentId)
+        public async Task<IActionResult> DeletePostCommentAsync(Guid PostCommentId)
         {
             try
             {
@@ -71,7 +71,7 @@ namespace backend.Controllers
 
         // Use a more specific route segment or query parameter to differentiate these methods
         [HttpGet("comment/{PostCommentId}")]
-        public async Task<IActionResult> GetPostCommendAsync(Guid PostCommentId)
+        public async Task<IActionResult> GetPostCommentAsync(Guid PostCommentId)
         {
             try
             {
@@ -85,7 +85,7 @@ namespace backend.Controllers
         }
 
         [HttpGet("post/{PostId}")]
-        public async Task<IActionResult> GetPostCommendsAsync(Guid PostId)
+        public async Task<IActionResult> GetPostCommentsAsync(Guid PostId)
         {
             try
             {

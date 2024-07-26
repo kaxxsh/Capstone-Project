@@ -28,10 +28,12 @@ namespace backend.Repository
                 post.CommentsCount++;
                 await context.SaveChangesAsync();
 
+                var User = await context.Users.FindAsync(entity.UserId);
+
                 var notification = new NotifyRequestDto
                 {
                     UserId = post.UserId,
-                    Content = $"{entity.User.UserName} commented on your post.",
+                    Content = $"{User.UserName} commented on your post.",
                 };
                 await notify.CreateNotificationAsync(notification);
                 return entity;
@@ -60,7 +62,7 @@ namespace backend.Repository
                 var notification = new NotifyRequestDto
                 {
                     UserId = post.UserId,
-                    Content = $"{postComment.User.UserName} deleted a comment on your post."
+                    Content = $"deleted a comment on your post."
                 };
 
                 await notify.CreateNotificationAsync(notification);
@@ -130,10 +132,12 @@ namespace backend.Repository
                 postComment.DateCreated = entity.DateCreated;
                 await context.SaveChangesAsync();
 
+                var User = await context.Users.FindAsync(entity.UserId);
+
                 var notification = new NotifyRequestDto
                 {
                     UserId = postComment.UserId,
-                    Content = $"{postComment.User.UserName} updated a comment on your post."
+                    Content = $"{User.UserName} updated a comment on your post."
                 };
 
                 await notify.CreateNotificationAsync(notification);
