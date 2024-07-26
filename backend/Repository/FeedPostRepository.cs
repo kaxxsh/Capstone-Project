@@ -119,5 +119,30 @@ namespace backend.Repository
                 .ToListAsync();
         }
 
+        public async Task<Hashtag> GetOrCreateHashtagAsync(string tag)
+        {
+            var hashtag = await _context.Hashtags.FirstOrDefaultAsync(h => h.Tag == tag);
+            if (hashtag == null)
+            {
+                hashtag = new Hashtag { Tag = tag };
+                _context.Hashtags.Add(hashtag);
+                await _context.SaveChangesAsync();
+            }
+            return hashtag;
+        }
+
+        public async Task<IEnumerable<PostFeed>> GetPostsByHashtagAsync(string hashtag)
+        {
+            return await _context.Posts
+                .Include(p => p.User)
+                .Include(p => p.PostComments)
+                .Include(p => p.PostLikes)
+                .Include(p => p.PostRetweets)
+                .Include(p => p.PostHashtags)
+                .ThenInclude(ph => ph.Hashtag)
+                .Where(p => p.PostHashtags.Any(ph => ph.Hashtag.Tag == hashtag))
+                .ToListAsync();
+        }
+
     }
 }

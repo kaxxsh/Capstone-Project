@@ -26,6 +26,8 @@ namespace backend.Context
         public DbSet<Message> Messages { get; set; }
         public DbSet<Conversation> Conversations { get; set; }
         public DbSet<UserConversation> UserConversations { get; set; }
+        public DbSet<Hashtag> Hashtags { get; set; }
+        public DbSet<PostHashtag> PostHashtags { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -140,6 +142,27 @@ namespace backend.Context
                 .HasOne(uc => uc.Conversation)
                 .WithMany(c => c.UserConversations)
                 .HasForeignKey(uc => uc.ConversationId);
+
+            // Configure Hashtag entity
+            builder.Entity<Hashtag>()
+                .HasIndex(h => h.Tag)
+                .IsUnique();
+
+            // Configure PostHashtag entity
+            builder.Entity<PostHashtag>()
+                .HasKey(ph => new { ph.PostId, ph.HashtagId });
+
+            builder.Entity<PostHashtag>()
+                .HasOne(ph => ph.Post)
+                .WithMany(p => p.PostHashtags)
+                .HasForeignKey(ph => ph.PostId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            builder.Entity<PostHashtag>()
+                .HasOne(ph => ph.Hashtag)
+                .WithMany(h => h.PostHashtags)
+                .HasForeignKey(ph => ph.HashtagId)
+                .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

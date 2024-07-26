@@ -1,175 +1,331 @@
-# Twitter Clone
+# Blogging app like twitter
 
-This is a Twitter clone application built with .NET and SQL for the backend, and Next.js for the frontend. The application includes features such as user registration, login, posting tweets, and following/unfollowing users.
+## Project Overview
+
+This project is a backend implementation for a social media application. It includes functionalities for user authentication, posting content, liking and commenting on posts, following other users, sending messages, and receiving notifications.
 
 ## Table of Contents
 
-- [Features](#features)
-- [Backend Setup](#backend-setup)
-  - [Project Setup](#project-setup)
-  - [Database Design](#database-design)
-  - [Entity Framework Core Configuration](#entity-framework-core-configuration)
-  - [Repositories and Services](#repositories-and-services)
-  - [Controllers](#controllers)
-  - [Authentication and Authorization](#authentication-and-authorization)
-  - [API Documentation with Swagger](#api-documentation-with-swagger)
-- [Frontend Setup](#frontend-setup)
-  - [Project Setup](#project-setup-1)
-  - [Configure Tailwind CSS](#configure-tailwind-css)
-  - [Page Structure](#page-structure)
-  - [State Management](#state-management)
-  - [API Integration](#api-integration)
-  - [Authentication](#authentication)
-- [Deployment](#deployment)
-- [Security Considerations](#security-considerations)
+- [Project Overview](#project-overview)
+- [Table of Contents](#table-of-contents)
+- [Class Diagram](#class-diagram)
+- [Technologies Used](#technologies-used)
+- [Getting Started](#getting-started)
+  - [Prerequisites](#prerequisites)
+  - [Installation](#installation)
+- [Database Models](#database-models)
+  - [UserDetails](#userdetails)
+  - [PostFeed](#postfeed)
+  - [PostLike](#postlike)
+  - [PostComment](#postcomment)
+  - [PostRetweet](#postretweet)
+  - [Hashtag](#hashtag)
+  - [PostHashtag](#posthashtag)
+  - [Conversation](#conversation)
+  - [Message](#message)
+  - [UserConversation](#userconversation)
+  - [Notify](#notify)
+  - [UserFollow](#userfollow)
+- [API Endpoints](#api-endpoints)
+  - [Auth](#auth)
+  - [Chat](#chat)
+  - [Notification](#notification)
+  - [PostComment](#postcomment)
+  - [PostFeed](#postfeed)
+  - [PostLike](#postlike)
+  - [PostRetweet](#postretweet)
+  - [User](#user)
+  - [UserFollow](#userfollow)
+- [Contributing](#contributing)
+- [License](#license)
 
-## Features
+## Class Diagram
 
-- User registration and login
-- Posting tweets
-- Viewing tweets from followed users
-- likes tweets from users
-- Following and unfollowing users
-- User profiles
+![Class Diagram](./Class-Diagram.png)
 
-## Backend Setup
+## Technologies Used
 
-### Project Setup
+- .NET Core
+- Entity Framework Core
+- ASP.NET Core Identity
+- Microsoft SQL Server
 
-1. **Create a new .NET Web API project:**
-   ```bash
-   dotnet new webapi -n TwitterCloneAPI
-   ```
+## Getting Started
 
-2. **Install necessary packages:**
-   ```bash
-   dotnet add package Microsoft.EntityFrameworkCore
-   dotnet add package Microsoft.EntityFrameworkCore.SqlServer
-   dotnet add package AutoMapper.Extensions.Microsoft.DependencyInjection
-   dotnet add package Swashbuckle.AspNetCore
-   ```
+### Prerequisites
 
-### Repositories and Services
+- .NET Core SDK
+- SQL Server
+- NextJs
+- Azure
 
-Create repositories for data access and services for business logic.
+### Installation
 
-### Controllers
+1. Clone the repository:
+    ```bash
+     https://github.com/kaxxsh/Capstone-Project.git
+    cd your-repository
+    ```
 
-- **UserController:** Handles user registration, login, profile management.
-- **TweetController:** Handles tweet creation, deletion, fetching tweets.
-- **FollowController:** Manages following/unfollowing users.
+2. Set up the database:
+    - Update the connection string in `appsettings.json`.
+    - Apply migrations to the database:
+        ```bash
+        dotnet ef database update
+        ```
 
-### Authentication and Authorization
+3. Run the application:
+    ```bash
+    dotnet run
+    ```
 
-Use JWT for token-based authentication and secure endpoints using the `[Authorize]` attribute.
+## Database Models
 
-### API Documentation with Swagger
+### UserDetails
 
-Enable Swagger in `Startup.cs`:
+Represents a user in the system.
 
-```csharp
-public void ConfigureServices(IServiceCollection services)
-{
-    services.AddSwaggerGen(c =>
-    {
-        c.SwaggerDoc("v1", new OpenApiInfo { Title = "TwitterCloneAPI", Version = "v1" });
-    });
-}
+- **Attributes**:
+  - Id
+  - Name
+  - ProfileImage
+  - Bio
+  - Location
+  - FollowersCount
+  - FollowingCount
+  - DateOfBirth
+  - JoinDate
+  - Gender
 
-public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
-{
-    app.UseSwagger();
-    app.UseSwaggerUI(c =>
-    {
-        c.SwaggerEndpoint("/swagger/v1/swagger.json", "TwitterCloneAPI v1");
-    });
-}
-```
+- **Relationships**:
+  - Posts
+  - PostLikes
+  - PostComments
+  - PostRetweets
+  - Followers
+  - Following
+  - Notifies
+  - SentNotifies
+  - UserConversations
 
-## Frontend Setup
+### PostFeed
 
-### Project Setup
+Represents a post made by a user.
 
-1. **Create a new Next.js project:**
-   ```bash
-   npx create-next-app twitter-clone-frontend
-   ```
+- **Attributes**:
+  - PostId
+  - Content
+  - Image
+  - DateCreated
+  - DateUpdated
+  - LikesCount
+  - CommentsCount
+  - RetweetsCount
 
-2. **Install necessary packages:**
-   ```bash
-   npm install axios tailwindcss
-   ```
+- **Relationships**:
+  - User
+  - PostLikes
+  - PostComments
+  - PostRetweets
+  - PostHashtags
 
-### Configure Tailwind CSS
+### PostLike
 
-1. **Install Tailwind CSS:**
-   ```bash
-   npx tailwindcss init -p
-   ```
+Represents a like on a post.
 
-2. **Configure `tailwind.config.js`:**
-   ```javascript
-   module.exports = {
-     content: [
-       './pages/**/*.{js,ts,jsx,tsx}',
-       './components/**/*.{js,ts,jsx,tsx}',
-     ],
-     theme: {
-       extend: {},
-     },
-     plugins: [],
-   }
-   ```
+- **Attributes**:
+  - PostLikeId
 
-3. **Add Tailwind directives to `globals.css`:**
-   ```css
-   @tailwind base;
-   @tailwind components;
-   @tailwind utilities;
-   ```
+- **Relationships**:
+  - Post
+  - User
 
-### Page Structure
+### PostComment
 
-- **Pages:** Home, Profile, Login, Register
-- **Components:** Navbar, Tweet, TweetForm, UserList
+Represents a comment on a post.
 
-### State Management
+- **Attributes**:
+  - PostCommentId
+  - Content
+  - DateCreated
 
-Use React Context API or a state management library like Redux for managing user authentication state and tweets.
+- **Relationships**:
+  - Post
+  - User
 
-### API Integration
+### PostRetweet
 
-1. **Set up Axios instance:**
-   ```javascript
-   import axios from 'axios';
+Represents a retweet of a post.
 
-   const api = axios.create({
-       baseURL: 'http://localhost:5000/api',
-   });
+- **Attributes**:
+  - RetweetId
+  - RetweetContent
+  - RetweetDate
 
-   export default api;
-   ```
+- **Relationships**:
+  - PostFeed
+  - User
 
-2. **Fetch data in pages/components:**
-   ```javascript
-   useEffect(() => {
-       api.get('/tweets')
-           .then(response => setTweets(response.data))
-           .catch(error => console.error(error));
-   }, []);
-   ```
+### Hashtag
 
-### Authentication
+Represents a hashtag used in posts.
 
-Implement login and registration forms. Store JWT tokens in cookies or local storage. Protect routes based on authentication status.
+- **Attributes**:
+  - HashtagId
+  - Tag
 
-## Deployment
+- **Relationships**:
+  - PostHashtags
 
-- **Backend:** Deploy on a cloud service like Azure or AWS.
-- **Frontend:** Deploy on Vercel or another static site hosting service.
+### PostHashtag
 
-## Security Considerations
+Represents the relationship between a post and a hashtag.
 
-- Ensure secure password storage (hashing).
-- Validate all inputs to prevent SQL injection.
-- Implement proper CORS policies.
+- **Attributes**:
+  - PostId
+  - HashtagId
+
+- **Relationships**:
+  - Post
+  - Hashtag
+
+### Conversation
+
+Represents a conversation between users.
+
+- **Attributes**:
+  - ConversationId
+  - CreatedAt
+
+- **Relationships**:
+  - Messages
+  - UserConversations
+
+### Message
+
+Represents a message in a conversation.
+
+- **Attributes**:
+  - MessageId
+  - ConversationId
+  - SenderId
+  - Content
+  - SentAt
+
+- **Relationships**:
+  - Sender
+  - Conversation
+
+### UserConversation
+
+Represents the relationship between a user and a conversation.
+
+- **Attributes**:
+  - UserId
+  - ConversationId
+
+- **Relationships**:
+  - User
+  - Conversation
+
+### Notify
+
+Represents a notification sent to a user.
+
+- **Attributes**:
+  - NotifyId
+  - Content
+  - DateCreated
+  - IsRead
+  - FromUserId
+  - UserId
+
+- **Relationships**:
+  - FromUser
+  - User
+
+### UserFollow
+
+Represents a follow relationship between users.
+
+- **Attributes**:
+  - Id
+  - FollowerUserId
+  - FollowedUserId
+  - FollowDate
+
+- **Relationships**:
+  - FollowerUser
+  - FollowedUser
+
+## API Endpoints
+
+### Auth
+
+- `POST /api/Auth/login`
+- `POST /api/Auth/register`
+
+### Chat
+
+- `POST /api/Chat/create-conversation`
+- `POST /api/Chat/send`
+- `GET /api/Chat/messages`
+- `GET /api/Chat/conversationsByUserId`
+- `GET /api/Chat/conversation`
+
+### Notification
+
+- `POST /api/Notification`
+- `GET /api/Notification/{id}`
+- `PUT /api/Notification/{id}`
+- `DELETE /api/Notification/{id}`
+- `GET /api/Notification/user/{userId}`
+
+### PostComment
+
+- `POST /api/PostComment`
+- `PUT /api/PostComment/{PostCommentId}`
+- `DELETE /api/PostComment/{PostCommentId}`
+- `GET /api/PostComment/comment/{PostCommentId}`
+- `GET /api/PostComment/post/{PostId}`
+
+### PostFeed
+
+- `GET /api/PostFeed`
+- `POST /api/PostFeed`
+- `GET /api/PostFeed/{postId}`
+- `PUT /api/PostFeed/{postId}`
+- `DELETE /api/PostFeed/{postId}`
+- `GET /api/PostFeed/GetPostByUser{UserID}`
+- `GET /api/PostFeed/hashtag/{tag}`
+
+### PostLike
+
+- `GET /api/PostLike/{postId}`
+- `POST /api/PostLike/{postId}`
+
+### PostRetweet
+
+- `POST /api/PostRetweet`
+- `DELETE /api/PostRetweet/{postRetweetId}`
+- `GET /api/PostRetweet/{postRetweetId}`
+- `GET /api/PostRetweet/post/{postId}`
+- `GET /api/PostRetweet/user/{userId}`
+
+### User
+
+- `GET /api/User`
+- `PUT /api/User`
+- `DELETE /api/User`
+- `GET /api/User/UserId`
+- `GET /api/User/Name`
+- `GET /api/User/UserName`
+
+### UserFollow
+
+- `POST /api/UserFollow/follow/{followerName}`
+- `POST /api/UserFollow/unfollow/{followerName}`
+- `GET /api/UserFollow/followers/{followerName}`
+- `GET /api/UserFollow/following/{followingName}`
+- `GET /api/UserFollow/isfollowing/{followerName}`
+

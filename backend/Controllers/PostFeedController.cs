@@ -1,8 +1,6 @@
 ﻿using backend.Interface.Services;
 using backend.Model.Dtos.PostFeed;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Threading.Tasks;
 
 namespace backend.Controllers
 {
@@ -76,6 +74,13 @@ namespace backend.Controllers
             return Ok(post);
         }
 
-        
+        [HttpGet("hashtag/{tag}")]
+        public async Task<IActionResult> GetPostsByHashtag(string tag)
+        {
+            var posts = await _services.GetPostsByHashtagAsync(tag);
+            return Ok(posts);
+        }
+
+
     }
 }

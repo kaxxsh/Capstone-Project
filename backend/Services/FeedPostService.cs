@@ -34,12 +34,24 @@ namespace backend.Services
             {
                 throw new Exception("User is not authenticated or UserId is not available.");
             }
+
             try
             {
                 var post = _mapper.Map<PostFeed>(postFeedRequestDto);
                 post.UserId = userId;
                 post.DateCreated = DateTime.Now;
                 post.DateUpdated = DateTime.Now;
+
+                // Process hashtags
+                foreach (var tag in postFeedRequestDto.Hashtags)
+                {
+                    var hashtag = await _repository.GetOrCreateHashtagAsync(tag);
+                    post.PostHashtags.Add(new PostHashtag
+                    {
+                        HashtagId = hashtag.HashtagId,
+                        Post = post
+                    });
+                }
 
                 var result = await _repository.Create(post);
                 return _mapper.Map<PostFeedResponseDto>(result);
@@ -49,6 +61,7 @@ namespace backend.Services
                 throw new Exception(ex.Message);
             }
         }
+
 
         public async Task<bool> DeletePostAsync(Guid postId)
         {
@@ -157,6 +170,12 @@ namespace backend.Services
                 throw new Exception(ex.Message);
             }
 
+        }
+
+        public async Task<IEnumerable<PostFeedResponseDto>> GetPostsByHashtagAsync(string hashtag)
+        {
+            var posts = await _repository.GetPostsByHashtagAsync(hashtag);
+            return _mapper.Map<IEnumerable<PostFeedResponseDto>>(posts);
         }
 
     }
