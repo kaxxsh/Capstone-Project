@@ -1,6 +1,8 @@
 ﻿using backend.Context;
 using backend.Interface.Repository;
+using backend.Interface.Services;
 using backend.Model.Domain.Post;
+using backend.Model.Dtos.Notify;
 using Microsoft.EntityFrameworkCore;
 
 namespace backend.Repository
@@ -8,10 +10,12 @@ namespace backend.Repository
     public class PostCommendRepository : IPostCommendRepository
     {
         private readonly ApplicationDbContext context;
+        private readonly INotifyServices notify;
 
-        public PostCommendRepository(ApplicationDbContext context)
+        public PostCommendRepository(ApplicationDbContext context, INotifyServices notify)
         {
             this.context = context;
+            this.notify = notify;
         }
 
         public async Task<PostComment> Create(PostComment entity)
@@ -23,6 +27,13 @@ namespace backend.Repository
                 var post = await context.Posts.FindAsync(entity.PostId);
                 post.CommentsCount++;
                 await context.SaveChangesAsync();
+
+                var notification = new NotifyRequestDto
+                {
+                    UserId = post.UserId,
+                    Content = $"{entity.User.UserName} commented on your post.",
+                };
+                await notify.CreateNotificationAsync(notification);
                 return entity;
             }
             catch (Exception ex)
@@ -45,6 +56,15 @@ namespace backend.Repository
                 var post = await context.Posts.FindAsync(postComment.PostId);
                 post.CommentsCount--;
                 await context.SaveChangesAsync();
+
+                var notification = new NotifyRequestDto
+                {
+                    UserId = post.UserId,
+                    Content = $"{postComment.User.UserName} deleted a comment on your post."
+                };
+
+                await notify.CreateNotificationAsync(notification);
+
                 return postComment;
             }
             catch (Exception ex)
@@ -109,6 +129,15 @@ namespace backend.Repository
                 postComment.Content = entity.Content;
                 postComment.DateCreated = entity.DateCreated;
                 await context.SaveChangesAsync();
+
+                var notification = new NotifyRequestDto
+                {
+                    UserId = postComment.UserId,
+                    Content = $"{postComment.User.UserName} updated a comment on your post."
+                };
+
+                await notify.CreateNotificationAsync(notification);
+
                 return postComment;
             }
             catch (Exception ex)

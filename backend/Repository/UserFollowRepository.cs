@@ -1,7 +1,9 @@
 ﻿using System.Threading.Tasks;
 using backend.Context;
 using backend.Interface.Repository;
+using backend.Interface.Services;
 using backend.Model.Domain.Follow;
+using backend.Model.Dtos.Notify;
 using Microsoft.EntityFrameworkCore;
 
 namespace backend.Repository
@@ -9,10 +11,12 @@ namespace backend.Repository
     public class UserFollowRepository : IUserFollowRepository
     {
         private readonly ApplicationDbContext _context;
+        private readonly INotifyServices _notify;
 
-        public UserFollowRepository(ApplicationDbContext context)
+        public UserFollowRepository(ApplicationDbContext context, INotifyServices notify)
         {
             _context = context;
+            _notify = notify;
         }
 
         public async Task<UserFollow> FollowUser(string followerName, string followedId)
@@ -42,6 +46,14 @@ namespace backend.Repository
                 followedUser.FollowersCount++;
                 await _context.SaveChangesAsync();
             }
+
+            var notification = new NotifyRequestDto
+            {
+                UserId = followedId,
+                Content = $"{follower.UserName} followed you",
+            };
+
+            await _notify.CreateNotificationAsync(notification);
 
             return userFollow;
         }
@@ -118,6 +130,14 @@ namespace backend.Repository
                     await _context.SaveChangesAsync();
                 }
             }
+
+            var notification = new NotifyRequestDto
+            {
+                UserId = followedId,
+                Content = $"{follower.UserName} unfollowed you",
+            };
+
+            await _notify.CreateNotificationAsync(notification);
 
             return userFollow;
         }

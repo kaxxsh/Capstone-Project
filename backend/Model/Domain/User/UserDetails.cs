@@ -25,5 +25,6 @@ namespace backend.Model.Domain.User
         public ICollection<UserFollow> Followers { get; set; } = new List<UserFollow>();
         public ICollection<UserFollow> Following { get; set; } = new List<UserFollow>();
         public ICollection<Notify> Notifies { get; set; } = new List<Notify>();
-    }
+        public ICollection<Notify> SentNotifies { get; set; } = new List<Notify>();
+    } 
 }

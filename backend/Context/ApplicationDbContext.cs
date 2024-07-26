@@ -72,6 +72,12 @@ namespace backend.Context
                 .HasForeignKey(n => n.UserId)
                 .OnDelete(DeleteBehavior.Cascade);
 
+            builder.Entity<Notify>()
+                .HasOne(n => n.FromUser)
+                .WithMany(u => u.SentNotifies)
+                .HasForeignKey(n => n.FromUserId)
+                .OnDelete(DeleteBehavior.Restrict);
+
             builder.Entity<UserFollow>()
                 .HasOne(uf => uf.FollowerUser)
                 .WithMany(u => u.Following)
@@ -83,7 +89,6 @@ namespace backend.Context
                 .WithMany(u => u.Followers)
                 .HasForeignKey(uf => uf.FollowedUserId)
                 .OnDelete(DeleteBehavior.Restrict);
-
         }
     }
 }

@@ -1,6 +1,8 @@
 ﻿using backend.Context;
 using backend.Interface.Repository;
+using backend.Interface.Services;
 using backend.Model.Domain.User;
+using backend.Model.Dtos.Notify;
 using Microsoft.EntityFrameworkCore;
 
 namespace backend.Repository
@@ -8,9 +10,12 @@ namespace backend.Repository
     public class UserRepository : IUserRepository
     {
         private readonly ApplicationDbContext context;
-        public UserRepository(ApplicationDbContext context)
+        private readonly INotifyServices notify;
+
+        public UserRepository(ApplicationDbContext context, INotifyServices notify)
         {
             this.context = context;
+            this.notify = notify;
         }
         public async Task<UserDetails> Create(UserDetails entity)
         {
@@ -61,6 +66,13 @@ namespace backend.Repository
                 user.Email = entity.Email;
                 user.ProfileImage = entity.ProfileImage;
                 await context.SaveChangesAsync();
+
+                var notification = new NotifyRequestDto
+                {
+                    UserId = user.Id,
+                    Content = "Your profile has been updated",
+                };
+
                 return user;
             }
             return null;

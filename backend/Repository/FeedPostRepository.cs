@@ -1,6 +1,8 @@
 ﻿using backend.Context;
 using backend.Interface.Repository;
+using backend.Interface.Services;
 using backend.Model.Domain.Post;
+using backend.Model.Dtos.Notify;
 using Microsoft.EntityFrameworkCore;
 
 namespace backend.Repository
@@ -8,16 +10,25 @@ namespace backend.Repository
     public class FeedPostRepository : IPostFeedRepository
     {
         private readonly ApplicationDbContext _context;
+        private readonly INotifyServices _notify;
 
-        public FeedPostRepository(ApplicationDbContext context)
+        public FeedPostRepository(ApplicationDbContext context, INotifyServices notify)
         {
             _context = context;
+            _notify = notify;
         }
 
         public async Task<PostFeed> Create(PostFeed entity)
         {
             _context.Posts.Add(entity);
             await _context.SaveChangesAsync();
+
+            var notification = new NotifyRequestDto
+            {
+                UserId = entity.UserId,
+                Content = "You have a new post",
+            };
+            await _notify.CreateNotificationAsync(notification);
             return entity;
         }
 
@@ -31,6 +42,13 @@ namespace backend.Repository
 
             _context.Posts.Remove(post);
             await _context.SaveChangesAsync();
+
+            var notification = new NotifyRequestDto
+            {
+                UserId = post.UserId,
+                Content = "Your post has been deleted",
+            };
+            await _notify.CreateNotificationAsync(notification);
             return post;
         }
 
@@ -67,6 +85,12 @@ namespace backend.Repository
             post.DateUpdated = DateTime.Now;
 
             await _context.SaveChangesAsync();
+
+            var notification = new NotifyRequestDto
+            {
+                UserId = post.UserId,
+                Content = "Your post has been updated",
+            };
             return post;
         }
 

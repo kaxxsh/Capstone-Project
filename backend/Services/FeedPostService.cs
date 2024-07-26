@@ -67,7 +67,7 @@ namespace backend.Services
             var posts = await _repository.GetAll();
             var sortedPosts = posts.OrderByDescending(post => post.DateUpdated);
             return _mapper.Map<IEnumerable<PostFeedResponseDto>>(sortedPosts);
-            
+      
         }
 
         public async Task<PostFeedResponseDto> UpdatePostAsync(Guid postId, PostFeedRequestDto postFeedRequestDto)

@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
 using backend.Context;
 using backend.Interface.Repository;
+using backend.Interface.Services;
 using backend.Model.Domain.Post;
+using backend.Model.Dtos.Notify;
 using backend.Model.Dtos.PostFeed.LikePost;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -13,12 +15,13 @@ namespace backend.Repository
     public class PostLikeRepository : IPostLikeRepository
     {
         private readonly ApplicationDbContext context;
+        private readonly INotifyServices services;
         private readonly IMapper mapper;
 
-        public PostLikeRepository(ApplicationDbContext context, IMapper mapper)
+        public PostLikeRepository(ApplicationDbContext context, INotifyServices services)
         {
             this.context = context;
-            this.mapper = mapper;
+            this.services = services;
         }
 
         public async Task<IEnumerable<LikePostResponseDto>> GetAllLikesOnPost(Guid postId)
@@ -58,6 +61,12 @@ namespace backend.Repository
                         await context.SaveChangesAsync();
                     }
 
+                    var notification = new NotifyRequestDto
+                    {
+                        UserId = post.UserId,
+                        Content = "You unliked a post."
+                    };
+
                     return null;
                 }
 
@@ -71,6 +80,11 @@ namespace backend.Repository
                     updatedPost.LikesCount++;
                     await context.SaveChangesAsync();
                 }
+                var notificationDto = new NotifyRequestDto
+                {
+                    UserId = updatedPost.UserId,
+                    Content = "You liked a post."
+                };
 
                 return postLike;
             }

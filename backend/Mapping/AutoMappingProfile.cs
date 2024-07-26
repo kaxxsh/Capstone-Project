@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
 using backend.Model.Domain.Follow;
+using backend.Model.Domain.Notification;
 using backend.Model.Domain.Post;
 using backend.Model.Domain.User;
+using backend.Model.Dtos.Notify;
 using backend.Model.Dtos.PostFeed;
 using backend.Model.Dtos.PostFeed.CommentPost;
 using backend.Model.Dtos.PostFeed.LikePost;
@@ -34,6 +36,12 @@ namespace backend.Mapping
             CreateMap<PostRetweet, PostRetweetDto>()
                 .ReverseMap();
             CreateMap<UserFollow, UserFollowDto>().ReverseMap();
+
+            CreateMap<Notify, NotifyRequestDto>().ReverseMap();
+            CreateMap<Notify, NotifyResponseDto>()
+                .ForMember(dest => dest.FromUserName, opt => opt.MapFrom(src => src.FromUser.UserName))
+                .ForMember(dest => dest.UserName, opt => opt.MapFrom(src => src.User.UserName))
+                .ReverseMap();
         }
     }
 

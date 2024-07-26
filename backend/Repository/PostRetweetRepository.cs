@@ -1,6 +1,8 @@
 ﻿using backend.Context;
 using backend.Interface.Repository;
+using backend.Interface.Services;
 using backend.Model.Domain.Post;
+using backend.Model.Dtos.Notify;
 using backend.Model.Dtos.PostFeed.RetweetPost;
 using Microsoft.EntityFrameworkCore;
 
@@ -9,10 +11,12 @@ namespace backend.Repository
     public class PostRetweetRepository : IPostRetweetRepository
     {
         private readonly ApplicationDbContext context;
+        private readonly INotifyServices notify;
 
-        public PostRetweetRepository(ApplicationDbContext context)
+        public PostRetweetRepository(ApplicationDbContext context, INotifyServices notify)
         {
             this.context = context;
+            this.notify = notify;
         }
         public async Task<PostRetweet> Create(PostRetweet entity)
         {
@@ -27,6 +31,14 @@ namespace backend.Repository
                 await context.SaveChangesAsync();
                 post.RetweetsCount++;
                 await context.SaveChangesAsync();
+
+                var notification = new NotifyRequestDto
+                {
+                    Content = "Retweeted your post",
+                    UserId = post.UserId
+                };
+
+                await notify.CreateNotificationAsync(notification);
                 return result.Entity;
             }
             catch (Exception e)
@@ -49,6 +61,14 @@ namespace backend.Repository
                 var post = await context.Posts.FirstOrDefaultAsync(x => x.PostId == postRetweet.PostId);
                 post.RetweetsCount--;
                 await context.SaveChangesAsync();
+
+                var notification = new NotifyRequestDto
+                {
+                    Content = "Unretweeted your post",
+                    UserId = post.UserId
+                };
+
+                await notify.CreateNotificationAsync(notification);
                 return postRetweet;
             }
             catch (Exception e)
@@ -61,7 +81,7 @@ namespace backend.Repository
         {
             try
             {
-                return await context.Retweets.OrderByDescending(x => x.RetweetDate).ToListAsync();
+                return await context.Retweets.Include(x => x.User).OrderByDescending(x => x.RetweetDate).ToListAsync();
             }
             catch (Exception e)
             {
@@ -151,6 +171,14 @@ namespace backend.Repository
                 postRetweet.RetweetContent = entity.RetweetContent;
                 postRetweet.RetweetDate = entity.RetweetDate;
                 await context.SaveChangesAsync();
+
+                var notification = new NotifyRequestDto
+                {
+                    Content = "Updated your retweet",
+                    UserId = postRetweet.UserId
+                };
+
+                await notify.CreateNotificationAsync(notification);
                 return postRetweet;
             }
             catch (Exception e)
