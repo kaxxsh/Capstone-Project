@@ -1,18 +1,21 @@
-﻿using backend.Model.Domain.Follow;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
+using backend.Model.Domain.Chat;
+using backend.Model.Domain.Follow;
 using backend.Model.Domain.Notification;
 using backend.Model.Domain.Post;
 using backend.Model.Domain.User;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore;
 
 namespace backend.Context
 {
     public class ApplicationDbContext : IdentityDbContext<UserDetails>
     {
-        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
+        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
+            : base(options)
         {
         }
 
+        // DbSets for various entities
         public DbSet<UserDetails> UserDetails { get; set; }
         public DbSet<PostFeed> Posts { get; set; }
         public DbSet<PostLike> Likes { get; set; }
@@ -20,16 +23,21 @@ namespace backend.Context
         public DbSet<PostRetweet> Retweets { get; set; }
         public DbSet<Notify> Notifies { get; set; }
         public DbSet<UserFollow> UserFollows { get; set; }
+        public DbSet<Message> Messages { get; set; }
+        public DbSet<Conversation> Conversations { get; set; }
+        public DbSet<UserConversation> UserConversations { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
 
+            // Configure PostFeed entity
             builder.Entity<PostFeed>()
                 .HasOne(p => p.User)
                 .WithMany(u => u.Posts)
                 .HasForeignKey(p => p.UserId);
 
+            // Configure PostLike entity
             builder.Entity<PostLike>()
                 .HasOne(pl => pl.Post)
                 .WithMany(p => p.PostLikes)
@@ -42,6 +50,7 @@ namespace backend.Context
                 .HasForeignKey(pl => pl.UserId)
                 .OnDelete(DeleteBehavior.Restrict);
 
+            // Configure PostComment entity
             builder.Entity<PostComment>()
                 .HasOne(pc => pc.Post)
                 .WithMany(p => p.PostComments)
@@ -54,6 +63,7 @@ namespace backend.Context
                 .HasForeignKey(pc => pc.UserId)
                 .OnDelete(DeleteBehavior.Restrict);
 
+            // Configure PostRetweet entity
             builder.Entity<PostRetweet>()
                 .HasOne(pr => pr.PostFeed)
                 .WithMany(p => p.PostRetweets)
@@ -66,6 +76,7 @@ namespace backend.Context
                 .HasForeignKey(pr => pr.UserId)
                 .OnDelete(DeleteBehavior.Restrict);
 
+            // Configure Notify entity
             builder.Entity<Notify>()
                 .HasOne(n => n.User)
                 .WithMany(u => u.Notifies)
@@ -78,6 +89,7 @@ namespace backend.Context
                 .HasForeignKey(n => n.FromUserId)
                 .OnDelete(DeleteBehavior.Restrict);
 
+            // Configure UserFollow entity
             builder.Entity<UserFollow>()
                 .HasOne(uf => uf.FollowerUser)
                 .WithMany(u => u.Following)
@@ -89,6 +101,45 @@ namespace backend.Context
                 .WithMany(u => u.Followers)
                 .HasForeignKey(uf => uf.FollowedUserId)
                 .OnDelete(DeleteBehavior.Restrict);
+
+            // Configure Message entity
+            builder.Entity<Message>()
+                .HasOne(m => m.Conversation)
+                .WithMany(c => c.Messages)
+                .HasForeignKey(m => m.ConversationId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            builder.Entity<Message>()
+                .HasOne(m => m.Sender)
+                .WithMany()
+                .HasForeignKey(m => m.SenderId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            // Configure Conversation entity
+            builder.Entity<Conversation>()
+                .HasMany(c => c.Messages)
+                .WithOne(m => m.Conversation)
+                .HasForeignKey(m => m.ConversationId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            builder.Entity<Conversation>()
+                .HasMany(c => c.UserConversations)
+                .WithOne(uc => uc.Conversation)
+                .HasForeignKey(uc => uc.ConversationId);
+
+            // Configure UserConversation entity
+            builder.Entity<UserConversation>()
+                .HasKey(uc => new { uc.UserId, uc.ConversationId });
+
+            builder.Entity<UserConversation>()
+                .HasOne(uc => uc.User)
+                .WithMany(u => u.UserConversations)
+                .HasForeignKey(uc => uc.UserId);
+
+            builder.Entity<UserConversation>()
+                .HasOne(uc => uc.Conversation)
+                .WithMany(c => c.UserConversations)
+                .HasForeignKey(uc => uc.ConversationId);
         }
     }
 }

@@ -37,36 +37,20 @@ namespace backend.Services
 
         public async Task<NotifyResponseDto> GetNotificationByIdAsync(Guid id)
         {
-            try
+            var notification = await _notifyRepository.GetNotificationByIdAsync(id);
+            if (notification == null)
             {
-                var notification = await _notifyRepository.GetNotificationByIdAsync(id);
-                if (notification == null)
-                {
-                    return null;
-                }
-
-                return _mapper.Map<NotifyResponseDto>(notification);
-            }
-            catch (Exception ex)
-            {
-                throw new Exception(ex.Message);
+                return null;
             }
 
+            return _mapper.Map<NotifyResponseDto>(notification);
         }
 
         public async Task<IEnumerable<NotifyResponseDto>> GetUserNotificationsAsync(string userId)
         {
-            try
-            {
-                var notifications = await _notifyRepository.GetUserNotificationsAsync(userId);
+            var notifications = await _notifyRepository.GetUserNotificationsAsync(userId);
 
-                return _mapper.Map<IEnumerable<NotifyResponseDto>>(notifications);
-            }
-            catch (Exception ex)
-            {
-                throw new Exception(ex.Message);
-            }
-
+            return _mapper.Map<IEnumerable<NotifyResponseDto>>(notifications);
         }
 
         public async Task<bool> UpdateNotificationAsync(Guid id, NotifyRequestDto notifyRequestDto)

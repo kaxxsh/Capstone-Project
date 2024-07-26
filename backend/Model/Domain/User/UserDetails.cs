@@ -1,4 +1,5 @@
-﻿using backend.Model.Domain.Follow;
+﻿using backend.Model.Domain.Chat;
+using backend.Model.Domain.Follow;
 using backend.Model.Domain.Notification;
 using backend.Model.Domain.Post;
 using Microsoft.AspNetCore.Identity;
@@ -26,5 +27,6 @@ namespace backend.Model.Domain.User
         public ICollection<UserFollow> Following { get; set; } = new List<UserFollow>();
         public ICollection<Notify> Notifies { get; set; } = new List<Notify>();
         public ICollection<Notify> SentNotifies { get; set; } = new List<Notify>();
+        public ICollection<UserConversation> UserConversations { get; set; } = new List<UserConversation>();
     } 
 }

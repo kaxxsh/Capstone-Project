@@ -37,7 +37,6 @@ namespace backend.Repository
                 .Include(n => n.FromUser)
                 .Include(n => n.User)
                 .Where(n => n.UserId == userId)
-                .OrderByDescending(n => n.DateCreated)
                 .ToListAsync();
         }
 

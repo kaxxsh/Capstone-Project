@@ -85,6 +85,7 @@ builder.Services.AddScoped<IPostRetweetServices, PostRetweetService>();
 builder.Services.AddScoped<IUserFollowService, UserFollowService>();
 builder.Services.AddScoped<IUserServices, UserService>();
 builder.Services.AddScoped<INotifyServices, NotifyService>();
+builder.Services.AddScoped<IMessageService, MessageService>();
 
 
 
@@ -96,6 +97,8 @@ builder.Services.AddScoped<IPostRetweetRepository, PostRetweetRepository>();
 builder.Services.AddScoped<IUserFollowRepository, UserFollowRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<INotifyRepository, NotifyRepository>();
+builder.Services.AddScoped<IMessageRepository, MessageRepository>();
+builder.Services.AddScoped<IConversationRepository,ConversationRepository>();
 
 var app = builder.Build();
 

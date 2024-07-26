@@ -137,7 +137,7 @@ namespace backend.Repository
                 var notification = new NotifyRequestDto
                 {
                     UserId = postComment.UserId,
-                    Content = $"{User.UserName} updated a comment on your post."
+                    Content = $"updated a comment on your post."
                 };
 
                 await _notify.CreateNotificationAsync(notification);
