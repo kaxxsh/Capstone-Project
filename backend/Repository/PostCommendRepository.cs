@@ -9,33 +9,33 @@ namespace backend.Repository
 {
     public class PostCommendRepository : IPostCommendRepository
     {
-        private readonly ApplicationDbContext context;
-        private readonly INotifyServices notify;
+        private readonly ApplicationDbContext _context;
+        private readonly INotifyServices _notify;
 
         public PostCommendRepository(ApplicationDbContext context, INotifyServices notify)
         {
-            this.context = context;
-            this.notify = notify;
+            _context = context;
+            _notify = notify;
         }
 
         public async Task<PostComment> Create(PostComment entity)
         {
             try
             {
-                await context.Comments.AddAsync(entity);
-                await context.SaveChangesAsync();
-                var post = await context.Posts.FindAsync(entity.PostId);
+                await _context.Comments.AddAsync(entity);
+                await _context.SaveChangesAsync();
+                var post = await _context.Posts.FindAsync(entity.PostId);
                 post.CommentsCount++;
-                await context.SaveChangesAsync();
+                await _context.SaveChangesAsync();
 
-                var User = await context.Users.FindAsync(entity.UserId);
+                var User = await _context.Users.FindAsync(entity.UserId);
 
                 var notification = new NotifyRequestDto
                 {
                     UserId = post.UserId,
                     Content = $"{User.UserName} commented on your post.",
                 };
-                await notify.CreateNotificationAsync(notification);
+                await _notify.CreateNotificationAsync(notification);
                 return entity;
             }
             catch (Exception ex)
@@ -48,16 +48,16 @@ namespace backend.Repository
         {
             try
             {
-                var postComment = await context.Comments.FindAsync(id);
+                var postComment = await _context.Comments.FindAsync(id);
                 if (postComment == null)
                 {
                     throw new Exception("Post Comment not found.");
                 }
-                context.Comments.Remove(postComment);
-                await context.SaveChangesAsync();
-                var post = await context.Posts.FindAsync(postComment.PostId);
+                _context.Comments.Remove(postComment);
+                await _context.SaveChangesAsync();
+                var post = await _context.Posts.FindAsync(postComment.PostId);
                 post.CommentsCount--;
-                await context.SaveChangesAsync();
+                await _context.SaveChangesAsync();
 
                 var notification = new NotifyRequestDto
                 {
@@ -65,7 +65,7 @@ namespace backend.Repository
                     Content = $"deleted a comment on your post."
                 };
 
-                await notify.CreateNotificationAsync(notification);
+                await _notify.CreateNotificationAsync(notification);
 
                 return postComment;
             }
@@ -79,7 +79,7 @@ namespace backend.Repository
         {
             try
             {
-                return await context.Comments.ToListAsync();
+                return await _context.Comments.ToListAsync();
             }
             catch (Exception ex)
             {
@@ -91,7 +91,7 @@ namespace backend.Repository
         {
             try
             {
-                var postComment = await context.Comments.Include(x => x.User).FirstOrDefaultAsync(x => x.PostCommentId == id);
+                var postComment = await _context.Comments.Include(x => x.User).FirstOrDefaultAsync(x => x.PostCommentId == id);
                 if (postComment == null)
                 {
                     throw new Exception("Post Comment not found.");
@@ -108,7 +108,7 @@ namespace backend.Repository
         {
             try
             {
-                return await context.Comments.Where(c => c.PostId == PostId)
+                return await _context.Comments.Where(c => c.PostId == PostId)
                                             .Include(x => x.User)
                                             .OrderByDescending(c => c.DateCreated)
                                             .ToListAsync();
@@ -123,16 +123,16 @@ namespace backend.Repository
         {
             try
             {
-                var postComment = await context.Comments.FindAsync(id);
+                var postComment = await _context.Comments.FindAsync(id);
                 if (postComment == null)
                 {
                     throw new Exception("Post Comment not found.");
                 }
                 postComment.Content = entity.Content;
                 postComment.DateCreated = entity.DateCreated;
-                await context.SaveChangesAsync();
+                await _context.SaveChangesAsync();
 
-                var User = await context.Users.FindAsync(entity.UserId);
+                var User = await _context.Users.FindAsync(entity.UserId);
 
                 var notification = new NotifyRequestDto
                 {
@@ -140,7 +140,7 @@ namespace backend.Repository
                     Content = $"{User.UserName} updated a comment on your post."
                 };
 
-                await notify.CreateNotificationAsync(notification);
+                await _notify.CreateNotificationAsync(notification);
 
                 return postComment;
             }

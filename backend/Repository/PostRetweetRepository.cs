@@ -10,27 +10,31 @@ namespace backend.Repository
 {
     public class PostRetweetRepository : IPostRetweetRepository
     {
-        private readonly ApplicationDbContext context;
-        private readonly INotifyServices notify;
+        private readonly ApplicationDbContext _context;
+        private readonly INotifyServices _notify;
 
         public PostRetweetRepository(ApplicationDbContext context, INotifyServices notify)
         {
-            this.context = context;
-            this.notify = notify;
+            _context = context;
+            _notify = notify;
         }
         public async Task<PostRetweet> Create(PostRetweet entity)
         {
             try
             {
-                var post = await context.Posts.FirstOrDefaultAsync(x => x.PostId == entity.PostId);
+                var post = await _context.Posts.FirstOrDefaultAsync(x => x.PostId == entity.PostId);
                 if (entity.UserId == post.UserId)
                 {
                     throw new Exception("You can't retweet your own post.");
                 }
-                var result = await context.Retweets.AddAsync(entity);
-                await context.SaveChangesAsync();
+                if(await _context.Retweets.AnyAsync(x => x.PostId == entity.PostId && x.UserId == entity.UserId))
+                {
+                    throw new Exception("You already retweeted this post.");
+                }
+                var result = await _context.Retweets.AddAsync(entity);
+                await _context.SaveChangesAsync();
                 post.RetweetsCount++;
-                await context.SaveChangesAsync();
+                await _context.SaveChangesAsync();
 
                 var notification = new NotifyRequestDto
                 {
@@ -38,7 +42,7 @@ namespace backend.Repository
                     UserId = post.UserId
                 };
 
-                await notify.CreateNotificationAsync(notification);
+                await _notify.CreateNotificationAsync(notification);
                 return result.Entity;
             }
             catch (Exception e)
@@ -51,16 +55,16 @@ namespace backend.Repository
         {
             try
             {
-                var postRetweet = await context.Retweets.FindAsync(id);
+                var postRetweet = await _context.Retweets.FindAsync(id);
                 if (postRetweet == null)
                 {
                     return null;
                 }
-                context.Retweets.Remove(postRetweet);
-                await context.SaveChangesAsync();
-                var post = await context.Posts.FirstOrDefaultAsync(x => x.PostId == postRetweet.PostId);
+                _context.Retweets.Remove(postRetweet);
+                await _context.SaveChangesAsync();
+                var post = await _context.Posts.FirstOrDefaultAsync(x => x.PostId == postRetweet.PostId);
                 post.RetweetsCount--;
-                await context.SaveChangesAsync();
+                await _context.SaveChangesAsync();
 
                 var notification = new NotifyRequestDto
                 {
@@ -68,7 +72,7 @@ namespace backend.Repository
                     UserId = post.UserId
                 };
 
-                await notify.CreateNotificationAsync(notification);
+                await _notify.CreateNotificationAsync(notification);
                 return postRetweet;
             }
             catch (Exception e)
@@ -81,7 +85,7 @@ namespace backend.Repository
         {
             try
             {
-                return await context.Retweets.Include(x => x.User).OrderByDescending(x => x.RetweetDate).ToListAsync();
+                return await _context.Retweets.Include(x => x.User).OrderByDescending(x => x.RetweetDate).ToListAsync();
             }
             catch (Exception e)
             {
@@ -93,7 +97,7 @@ namespace backend.Repository
         {
             try
             {
-                return await context.Retweets
+                return await _context.Retweets
                     .Include(x => x.PostFeed)
                     .Include(x => x.PostFeed.PostLikes)
                     .ThenInclude(x => x.User)
@@ -114,12 +118,12 @@ namespace backend.Repository
         {
             try
             {
-                var post = await context.Posts.FirstOrDefaultAsync(x => x.PostId == postId);
+                var post = await _context.Posts.FirstOrDefaultAsync(x => x.PostId == postId);
                 if (post == null)
                 {
                     return null;
                 }
-                var result = await context.Retweets
+                var result = await _context.Retweets
                     .Include(x => x.PostFeed)
                     .Include(x => x.PostFeed.PostLikes)
                     .ThenInclude(x => x.User)
@@ -141,12 +145,12 @@ namespace backend.Repository
         {
             try
             {
-                var user = await context.Users.FirstOrDefaultAsync(x => x.Id == userId);
+                var user = await _context.Users.FirstOrDefaultAsync(x => x.Id == userId);
                 if (user == null)
                 {
                     return null;
                 }
-                var result = await context.Retweets
+                var result = await _context.Retweets
                     .Include(x => x.PostFeed)
                     .Include(x => x.PostFeed.PostLikes)
                     .ThenInclude(x => x.User)
@@ -169,14 +173,14 @@ namespace backend.Repository
         {
             try
             {
-                var postRetweet = await context.Retweets.FindAsync(id);
+                var postRetweet = await _context.Retweets.FindAsync(id);
                 if (postRetweet == null)
                 {
                     return null;
                 }
                 postRetweet.RetweetContent = entity.RetweetContent;
                 postRetweet.RetweetDate = entity.RetweetDate;
-                await context.SaveChangesAsync();
+                await _context.SaveChangesAsync();
 
                 var notification = new NotifyRequestDto
                 {
@@ -184,7 +188,7 @@ namespace backend.Repository
                     UserId = postRetweet.UserId
                 };
 
-                await notify.CreateNotificationAsync(notification);
+                await _notify.CreateNotificationAsync(notification);
                 return postRetweet;
             }
             catch (Exception e)

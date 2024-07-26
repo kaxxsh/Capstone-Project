@@ -15,20 +15,20 @@ namespace backend.Services
 {
     public class PostCommendService : IPostCommendServices
     {
-        private readonly IPostCommendRepository repository;
-        private readonly IHttpContextAccessor httpContextAccessor;
-        private readonly IMapper mapper;
+        private readonly IPostCommendRepository _repository;
+        private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly IMapper _mapper;
 
         public PostCommendService(IPostCommendRepository repository, IHttpContextAccessor httpContextAccessor, IMapper mapper)
         {
-            this.repository = repository;
-            this.httpContextAccessor = httpContextAccessor;
-            this.mapper = mapper;
+            _repository = repository;
+            _httpContextAccessor = httpContextAccessor;
+            _mapper = mapper;
         }
 
         public async Task<PostComment> AddPostCommendAsync(PostCommentRequestDto postComment)
         {
-            var jwtToken = httpContextAccessor.HttpContext.Request.Cookies["jwt"];
+            var jwtToken = _httpContextAccessor.HttpContext.Request.Cookies["jwt"];
             if (jwtToken == null) throw new Exception("JWT token not found.");
             var handler = new JwtSecurityTokenHandler();
             var token = handler.ReadJwtToken(jwtToken);
@@ -44,7 +44,7 @@ namespace backend.Services
                     Content = postComment.Content,
                     DateCreated = DateTime.Now
                 };
-                return await repository.Create(postCommentEntity);
+                return await _repository.Create(postCommentEntity);
             }
             catch (Exception ex)
             {
@@ -56,7 +56,7 @@ namespace backend.Services
         {
             try
             {
-                return await repository.Delete(PostCommentId);
+                return await _repository.Delete(PostCommentId);
             }
             catch (Exception ex)
             {
@@ -69,7 +69,7 @@ namespace backend.Services
         {
             try
             {
-                var comment = await repository.GetById(PostCommentId);
+                var comment = await _repository.GetById(PostCommentId);
                 return new PostCommentResponseDto
                 {
                     PostCommentId = comment.PostCommentId,
@@ -89,7 +89,7 @@ namespace backend.Services
         {
             try
             {
-                var comments = await repository.GetCommentByPost(PostId);
+                var comments = await _repository.GetCommentByPost(PostId);
                 return comments.Select(x => new PostCommentResponseDto
                 {
                     PostCommentId = x.PostCommentId,
@@ -115,7 +115,7 @@ namespace backend.Services
                     Content = postComment.Content,
                     DateCreated = DateTime.Now
                 };
-                return await repository.Update(PostCommentId, postCommentEntity);
+                return await _repository.Update(PostCommentId, postCommentEntity);
             }
             catch (Exception ex)
             {

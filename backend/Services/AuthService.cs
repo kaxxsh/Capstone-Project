@@ -28,32 +28,47 @@ namespace backend.Services
 
         public async Task<UserResponseDto> LoginAsync(LoginRequestDto loginRequestDto)
         {
-            var user = await _authRepository.Login(loginRequestDto);
-            if (user == null)
+            try
             {
-                return null;
+                var user = await _authRepository.Login(loginRequestDto);
+                if (user == null)
+                {
+                    return null;
+                }
+
+                var token = _tokenService.CreateToken(user);
+
+                SetTokenCookie(token);
+                return _mapper.Map<UserResponseDto>(user);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
             }
 
-            var token = _tokenService.CreateToken(user);
-
-            SetTokenCookie(token);
-            return _mapper.Map<UserResponseDto>(user);
         }
 
         public async Task<UserResponseDto> RegisterAsync(RegisterRequestDto registerRequestDto)
         {
-            var user = await _authRepository.Register(registerRequestDto);
-            if (user == null)
+            try
             {
-                // Handle registration failure
-                return null;
+                var user = await _authRepository.Register(registerRequestDto);
+                if (user == null)
+                {
+                    return null;
+                }
+
+                var token = _tokenService.CreateToken(user);
+
+                SetTokenCookie(token);
+
+                return _mapper.Map<UserResponseDto>(user);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
             }
 
-            var token = _tokenService.CreateToken(user);
-
-            SetTokenCookie(token);
-
-            return _mapper.Map<UserResponseDto>(user);
         }
 
         private void SetTokenCookie(string token)
@@ -61,8 +76,8 @@ namespace backend.Services
             var cookieOptions = new CookieOptions
             {
                 HttpOnly = true,
-                Expires = DateTime.UtcNow.AddHours(1),
-                Secure = true, // Ensure this is true in production to use HTTPS
+                Expires = DateTime.UtcNow.AddHours(6),
+                Secure = true,
                 SameSite = SameSiteMode.Strict
             };
 

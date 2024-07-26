@@ -10,21 +10,21 @@ namespace backend.Services
 {
     public class PostRetweetService : IPostRetweetServices
     {
-        private readonly IPostRetweetRepository repository;
-        private readonly IMapper mapper;
-        private readonly IHttpContextAccessor httpContextAccessor;
+        private readonly IPostRetweetRepository _repository;
+        private readonly IMapper _mapper;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
         public PostRetweetService(IPostRetweetRepository repository, IMapper mapper, IHttpContextAccessor httpContextAccessor)
         {
-            this.repository = repository;
-            this.mapper = mapper;
-            this.httpContextAccessor = httpContextAccessor;
+            _repository = repository;
+            _mapper = mapper;
+            _httpContextAccessor = httpContextAccessor;
         }
         public async Task<PostRetweetResponseDto> AddPostRetweetAsync(PostRetweetRequestDto postRetweetDto)
         {
             try
             {
-                var jwtToken = httpContextAccessor.HttpContext.Request.Cookies["jwt"];
+                var jwtToken = _httpContextAccessor.HttpContext.Request.Cookies["jwt"];
                 var handler = new JwtSecurityTokenHandler();
                 var token = handler.ReadJwtToken(jwtToken);
                 var userId = token.Claims.FirstOrDefault(c => c.Type == "nameid")?.Value;
@@ -35,8 +35,8 @@ namespace backend.Services
                     RetweetContent = postRetweetDto.RetweetContent,
                     RetweetDate = DateTime.Now
                 };
-                var result = await repository.Create(mapper.Map<PostRetweet>(data));
-                return mapper.Map<PostRetweetResponseDto>(result);
+                var result = await _repository.Create(_mapper.Map<PostRetweet>(data));
+                return _mapper.Map<PostRetweetResponseDto>(result);
             }
             catch (Exception e)
             {
@@ -48,7 +48,7 @@ namespace backend.Services
         {
             try
             {
-                var result = await repository.Delete(postRetweetId);
+                var result = await _repository.Delete(postRetweetId);
                 return result != null;
             }
             catch (Exception e)
@@ -61,8 +61,8 @@ namespace backend.Services
         {
             try
             {
-                var result = await repository.GetById(postRetweetId);
-                return mapper.Map<PostRetweetResponseDto>(result);
+                var result = await _repository.GetById(postRetweetId);
+                return _mapper.Map<PostRetweetResponseDto>(result);
             }
             catch (Exception e)
             {
@@ -74,8 +74,8 @@ namespace backend.Services
         {
             try
             {
-                var result = await repository.GetPostRetweetsByPost(postId);
-                return mapper.Map<IEnumerable<PostRetweetResponseDto>>(result);
+                var result = await _repository.GetPostRetweetsByPost(postId);
+                return _mapper.Map<IEnumerable<PostRetweetResponseDto>>(result);
             }
             catch (Exception e)
             {
@@ -87,8 +87,8 @@ namespace backend.Services
         {
             try
             {
-                var result = await repository.GetPostRetweetsByUserId(userId);
-                return mapper.Map<IEnumerable<PostRetweetResponseDto>>(result);
+                var result = await _repository.GetPostRetweetsByUserId(userId);
+                return _mapper.Map<IEnumerable<PostRetweetResponseDto>>(result);
             }
             catch (Exception e)
             {

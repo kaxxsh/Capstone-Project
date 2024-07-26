@@ -9,14 +9,14 @@ namespace backend.Services
     public class NotifyService : INotifyServices
     {
         private readonly INotifyRepository _notifyRepository;
-        private readonly IMapper mapper;
-        private readonly IHttpContextAccessor httpContextAccessor;
+        private readonly IMapper _mapper;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
         public NotifyService(INotifyRepository notifyRepository, IMapper mapper, IHttpContextAccessor httpContextAccessor)
         {
             _notifyRepository = notifyRepository;
-            this.mapper = mapper;
-            this.httpContextAccessor = httpContextAccessor;
+            _mapper = _mapper;
+            _httpContextAccessor = httpContextAccessor;
         }
 
         public async Task<bool> CreateNotificationAsync(NotifyRequestDto notifyRequestDto)
@@ -37,43 +37,75 @@ namespace backend.Services
 
         public async Task<NotifyResponseDto> GetNotificationByIdAsync(Guid id)
         {
-            var notification = await _notifyRepository.GetNotificationByIdAsync(id);
-            if (notification == null)
+            try
             {
-                return null;
+                var notification = await _notifyRepository.GetNotificationByIdAsync(id);
+                if (notification == null)
+                {
+                    return null;
+                }
+
+                return _mapper.Map<NotifyResponseDto>(notification);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
             }
 
-            return mapper.Map<NotifyResponseDto>(notification);
         }
 
         public async Task<IEnumerable<NotifyResponseDto>> GetUserNotificationsAsync(string userId)
         {
-            var notifications = await _notifyRepository.GetUserNotificationsAsync(userId);
+            try
+            {
+                var notifications = await _notifyRepository.GetUserNotificationsAsync(userId);
 
-            return mapper.Map<IEnumerable<NotifyResponseDto>>(notifications);
+                return _mapper.Map<IEnumerable<NotifyResponseDto>>(notifications);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+
         }
 
         public async Task<bool> UpdateNotificationAsync(Guid id, NotifyRequestDto notifyRequestDto)
         {
-            var notification = await _notifyRepository.GetNotificationByIdAsync(id);
-            if (notification == null)
+            try
             {
-                return false;
+                var notification = await _notifyRepository.GetNotificationByIdAsync(id);
+                if (notification == null)
+                {
+                    return false;
+                }
+
+                notification.Content = notifyRequestDto.Content;
+
+                return await _notifyRepository.UpdateNotificationAsync(notification);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
             }
 
-            notification.Content = notifyRequestDto.Content;
-
-            return await _notifyRepository.UpdateNotificationAsync(notification);
         }
 
         public async Task<bool> DeleteNotificationAsync(Guid id)
         {
-            return await _notifyRepository.DeleteNotificationAsync(id);
+            try
+            {
+                return await _notifyRepository.DeleteNotificationAsync(id);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+
         }
 
         public string GetUserId()
         {
-            var jwtToken = httpContextAccessor.HttpContext.Request.Cookies["jwt"];
+            var jwtToken = _httpContextAccessor.HttpContext.Request.Cookies["jwt"];
             var handler = new JwtSecurityTokenHandler();
             var token = handler.ReadJwtToken(jwtToken);
             var userId = token.Claims.FirstOrDefault(c => c.Type == "nameid")?.Value;

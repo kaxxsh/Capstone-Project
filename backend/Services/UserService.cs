@@ -9,22 +9,22 @@ namespace backend.Services
 {
     public class UserService : IUserServices
     {
-        private readonly IUserRepository repository;
-        private readonly IMapper mapper;
-        private readonly IHttpContextAccessor httpContextAccessor;
+        private readonly IUserRepository _repository;
+        private readonly IMapper _mapper;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
         public UserService(IUserRepository repository, IMapper mapper, IHttpContextAccessor httpContextAccessor)
         {
-            this.repository = repository;
-            this.mapper = mapper;
-            this.httpContextAccessor = httpContextAccessor;
+            _repository = repository;
+            _mapper = mapper;
+            _httpContextAccessor = httpContextAccessor;
         }
         public async Task<UserDto> DeleteUserAsync(string id)
         {
             try
             {
-                var result = await repository.Delete(id);
-                return mapper.Map<UserDto>(result);
+                var result = await _repository.Delete(id);
+                return _mapper.Map<UserDto>(result);
             }
             catch (Exception ex)
             {
@@ -36,8 +36,8 @@ namespace backend.Services
         {
             try
             {
-                var result = await repository.GetAll();
-                return mapper.Map<IEnumerable<UserDto>>(result);
+                var result = await _repository.GetAll();
+                return _mapper.Map<IEnumerable<UserDto>>(result);
             }
             catch (Exception ex)
             {
@@ -49,8 +49,8 @@ namespace backend.Services
         {
             try
             {
-                var result = await repository.GetById(id);
-                return mapper.Map<UserDto>(result);
+                var result = await _repository.GetById(id);
+                return _mapper.Map<UserDto>(result);
             }
             catch (Exception ex)
             {
@@ -62,8 +62,8 @@ namespace backend.Services
         {
             try
             {
-                var result = await repository.GetUserByNameAsync(Name);
-                return mapper.Map<UserDto>(result);
+                var result = await _repository.GetUserByNameAsync(Name);
+                return _mapper.Map<UserDto>(result);
             }
             catch (Exception ex)
             {
@@ -75,8 +75,8 @@ namespace backend.Services
         {
             try
             {
-                var result = await repository.GetUserByUserNameAsync(UserName);
-                return mapper.Map<UserDto>(result);
+                var result = await _repository.GetUserByUserNameAsync(UserName);
+                return _mapper.Map<UserDto>(result);
             }
             catch (Exception ex)
             {
@@ -89,8 +89,8 @@ namespace backend.Services
             try
             {
                 var userId = GetUserId();
-                var result = await repository.Update(userId, mapper.Map<UserDetails>(user));
-                return mapper.Map<UserDto>(result);
+                var result = await _repository.Update(userId, _mapper.Map<UserDetails>(user));
+                return _mapper.Map<UserDto>(result);
             }
             catch (Exception ex)
             {
@@ -100,7 +100,7 @@ namespace backend.Services
 
         public string GetUserId()
         {
-            var jwtToken = httpContextAccessor.HttpContext.Request.Cookies["jwt"];
+            var jwtToken = _httpContextAccessor.HttpContext.Request.Cookies["jwt"];
             var handler = new JwtSecurityTokenHandler();
             var token = handler.ReadJwtToken(jwtToken);
             var userId = token.Claims.FirstOrDefault(c => c.Type == "nameid")?.Value;

@@ -8,15 +8,15 @@ namespace backend.Services
 {
     public class UserFollowService : IUserFollowService
     {
-        private readonly IUserFollowRepository repository;
-        private readonly IHttpContextAccessor httpContextAccessor;
-        private readonly IMapper mapper;
+        private readonly IUserFollowRepository _repository;
+        private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly IMapper _mapper;
 
         public UserFollowService(IUserFollowRepository repository, IHttpContextAccessor httpContextAccessor, IMapper mapper)
         {
-            this.repository = repository;
-            this.httpContextAccessor = httpContextAccessor;
-            this.mapper = mapper;
+            _repository = repository;
+            _httpContextAccessor = httpContextAccessor;
+            _mapper = mapper;
         }
         public async Task<bool> FollowUserAsync(string followerName)
         {
@@ -29,7 +29,7 @@ namespace backend.Services
                     throw new Exception("User is not authenticated or Logined User.");
                 }
 
-                var result = await repository.FollowUser(followerName, userId);
+                var result = await _repository.FollowUser(followerName, userId);
                 if (result != null)
                 {
                     return true;
@@ -52,7 +52,7 @@ namespace backend.Services
                 {
                     throw new Exception("User is not authenticated or Logined User.");
                 }
-                var result = await repository.GetFollowers(followerName, userId);
+                var result = await _repository.GetFollowers(followerName, userId);
                 return result.Select(r => new UserFollowDto
                 {
                     UserId = r.FollowedUserId,
@@ -74,7 +74,7 @@ namespace backend.Services
                 {
                     throw new Exception("User is not authenticated or Logined User.");
                 }
-                var result = await repository.GetFollowing(followingName, userId);
+                var result = await _repository.GetFollowing(followingName, userId);
                 return result.Select(r => new UserFollowDto
                 {
                     UserId = r.FollowerUserId,
@@ -96,7 +96,7 @@ namespace backend.Services
                 {
                     throw new Exception("User is not authenticated or Logined User.");
                 }
-                var result = await repository.IsFollowing(followerName, userId);
+                var result = await _repository.IsFollowing(followerName, userId);
                 return result;
             }
             catch (Exception e)
@@ -116,7 +116,7 @@ namespace backend.Services
                     throw new Exception("User is not authenticated or logged in.");
                 }
 
-                var result = await repository.UnfollowUser(followerName, userId);
+                var result = await _repository.UnfollowUser(followerName, userId);
                 return result != null;
             }
             catch (Exception)
@@ -127,7 +127,7 @@ namespace backend.Services
 
         public string GetUserId()
         {
-            var jwtToken = httpContextAccessor.HttpContext.Request.Cookies["jwt"];
+            var jwtToken = _httpContextAccessor.HttpContext.Request.Cookies["jwt"];
             var handler = new JwtSecurityTokenHandler();
             var token = handler.ReadJwtToken(jwtToken);
             var userId = token.Claims.FirstOrDefault(c => c.Type == "nameid")?.Value;

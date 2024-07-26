@@ -34,83 +34,129 @@ namespace backend.Services
             {
                 throw new Exception("User is not authenticated or UserId is not available.");
             }
+            try
+            {
+                var post = _mapper.Map<PostFeed>(postFeedRequestDto);
+                post.UserId = userId;
+                post.DateCreated = DateTime.Now;
+                post.DateUpdated = DateTime.Now;
 
-            var post = _mapper.Map<PostFeed>(postFeedRequestDto);
-            post.UserId = userId;
-            post.DateCreated = DateTime.Now;
-            post.DateUpdated = DateTime.Now;
-
-            var result = await _repository.Create(post);
-            return _mapper.Map<PostFeedResponseDto>(result);
+                var result = await _repository.Create(post);
+                return _mapper.Map<PostFeedResponseDto>(result);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
         }
 
         public async Task<bool> DeletePostAsync(Guid postId)
         {
-            var post = await _repository.GetById(postId);
-            if (post == null)
+            try
             {
-                return false;
+                var post = await _repository.GetById(postId);
+                if (post == null)
+                {
+                    return false;
+                }
+
+                var result = await _repository.Delete(postId);
+                return result != null;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
             }
 
-            var result = await _repository.Delete(postId);
-            return result != null;
         }
 
         public async Task<PostFeedResponseDto> GetPostAsync(Guid postId)
         {
-            var post = await _repository.GetById(postId);
-            return _mapper.Map<PostFeedResponseDto>(post);
+            try
+            {
+                var post = await _repository.GetById(postId);
+                return _mapper.Map<PostFeedResponseDto>(post);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+
         }
 
         public async Task<IEnumerable<PostFeedResponseDto>> GetAllPostsAsync()
         {
-            var posts = await _repository.GetAll();
-            var sortedPosts = posts.OrderByDescending(post => post.DateUpdated);
-            return _mapper.Map<IEnumerable<PostFeedResponseDto>>(sortedPosts);
-      
+            try
+            {
+                var posts = await _repository.GetAll();
+                var sortedPosts = posts.OrderByDescending(post => post.DateUpdated);
+                return _mapper.Map<IEnumerable<PostFeedResponseDto>>(sortedPosts);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+
+
         }
 
         public async Task<PostFeedResponseDto> UpdatePostAsync(Guid postId, PostFeedRequestDto postFeedRequestDto)
         {
-            var post = await _repository.GetById(postId);
-            if (post == null)
+            try
             {
-                return null;
+                var post = await _repository.GetById(postId);
+                if (post == null)
+                {
+                    return null;
+                }
+
+                post.Content = postFeedRequestDto.Content;
+                post.Image = postFeedRequestDto.Image;
+                post.DateUpdated = DateTime.Now;
+
+                var result = await _repository.Update(postId, post);
+                return _mapper.Map<PostFeedResponseDto>(result);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
             }
 
-            post.Content = postFeedRequestDto.Content;
-            post.Image = postFeedRequestDto.Image;
-            post.DateUpdated = DateTime.Now;
-
-            var result = await _repository.Update(postId, post);
-            return _mapper.Map<PostFeedResponseDto>(result);
         }
 
         public async Task<List<CombinedPostViewModel>> GetUserPostsAndRetweets(string userId)
         {
-            var originalPosts = await _repository.GetPostsByUserAsync(userId);
-            var originalPostViewModels = originalPosts.Select(post => new CombinedPostViewModel
+            try
             {
-                Post = _mapper.Map<PostFeedResponseDto>(post),
-                IsRetweet = false,
-                RetweetContent = null,
-                RetweetedBy = null
-            }).ToList();
+                var originalPosts = await _repository.GetPostsByUserAsync(userId);
+                var originalPostViewModels = originalPosts.Select(post => new CombinedPostViewModel
+                {
+                    Post = _mapper.Map<PostFeedResponseDto>(post),
+                    IsRetweet = false,
+                    RetweetContent = null,
+                    RetweetedBy = null
+                }).ToList();
 
-            var retweetedPosts = await _repository.GetRetweetsByUserAsync(userId);
-            var retweetPostViewModels = retweetedPosts.Select(retweet => new CombinedPostViewModel
+                var retweetedPosts = await _repository.GetRetweetsByUserAsync(userId);
+                var retweetPostViewModels = retweetedPosts.Select(retweet => new CombinedPostViewModel
+                {
+                    Post = _mapper.Map<PostFeedResponseDto>(retweet.PostFeed),
+                    IsRetweet = true,
+                    RetweetContent = retweet.RetweetContent,
+                    RetweetedBy = retweet.User
+                }).ToList();
+
+                var allPosts = originalPostViewModels.Concat(retweetPostViewModels)
+                                                     .OrderByDescending(p => p.Post.DateCreated)
+                                                     .ToList();
+
+                return allPosts;
+            }
+            catch (Exception ex)
             {
-                Post = _mapper.Map<PostFeedResponseDto>(retweet.PostFeed),
-                IsRetweet = true,
-                RetweetContent = retweet.RetweetContent,
-                RetweetedBy = retweet.User
-            }).ToList();
+                throw new Exception(ex.Message);
+            }
 
-            var allPosts = originalPostViewModels.Concat(retweetPostViewModels)
-                                                 .OrderByDescending(p => p.Post.DateCreated)
-                                                 .ToList();
-
-            return allPosts;
         }
 
     }

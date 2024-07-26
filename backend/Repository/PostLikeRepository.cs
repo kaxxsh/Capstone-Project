@@ -14,21 +14,21 @@ namespace backend.Repository
 {
     public class PostLikeRepository : IPostLikeRepository
     {
-        private readonly ApplicationDbContext context;
-        private readonly INotifyServices services;
-        private readonly IMapper mapper;
+        private readonly ApplicationDbContext _context;
+        private readonly INotifyServices _services;
+        private readonly IMapper _mapper;
 
         public PostLikeRepository(ApplicationDbContext context, INotifyServices services)
         {
-            this.context = context;
-            this.services = services;
+            _context = context;
+            _services = services;
         }
 
         public async Task<IEnumerable<LikePostResponseDto>> GetAllLikesOnPost(Guid postId)
         {
             try
             {
-                return await context.Likes
+                return await _context.Likes
                     .Where(p => p.PostId == postId)
                     .Select(l => new LikePostResponseDto
                     {
@@ -47,17 +47,17 @@ namespace backend.Repository
         {
             try
             {
-                var like = await context.Likes.FirstOrDefaultAsync(l => l.PostId == postId && l.UserId == userId);
+                var like = await _context.Likes.FirstOrDefaultAsync(l => l.PostId == postId && l.UserId == userId);
                 if (like != null)
                 {
-                    context.Likes.Remove(like);
-                    await context.SaveChangesAsync();
+                    _context.Likes.Remove(like);
+                    await _context.SaveChangesAsync();
 
-                    var post = await context.Posts.FirstOrDefaultAsync(p => p.PostId == postId);
+                    var post = await _context.Posts.FirstOrDefaultAsync(p => p.PostId == postId);
                     if (post != null)
                     {
                         post.LikesCount--;
-                        await context.SaveChangesAsync();
+                        await _context.SaveChangesAsync();
                     }
 
                     var notification = new NotifyRequestDto
@@ -65,20 +65,20 @@ namespace backend.Repository
                         UserId = post.UserId,
                         Content = "You unliked a post."
                     };
-                    await services.CreateNotificationAsync(notification);
+                    await _services.CreateNotificationAsync(notification);
 
                     return null;
                 }
 
                 var postLike = new PostLike { PostId = postId, UserId = userId };
-                await context.Likes.AddAsync(postLike);
-                await context.SaveChangesAsync();
+                await _context.Likes.AddAsync(postLike);
+                await _context.SaveChangesAsync();
 
-                var updatedPost = await context.Posts.FirstOrDefaultAsync(p => p.PostId == postId);
+                var updatedPost = await _context.Posts.FirstOrDefaultAsync(p => p.PostId == postId);
                 if (updatedPost != null)
                 {
                     updatedPost.LikesCount++;
-                    await context.SaveChangesAsync();
+                    await _context.SaveChangesAsync();
                 }
                 var notificationDto = new NotifyRequestDto
                 {
@@ -86,7 +86,7 @@ namespace backend.Repository
                     Content = "You liked a post."
                 };
 
-                await services.CreateNotificationAsync(notificationDto);
+                await _services.CreateNotificationAsync(notificationDto);
                 return postLike;
             }
             catch (Exception e)
