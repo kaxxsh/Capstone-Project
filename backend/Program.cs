@@ -15,12 +15,20 @@ using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
-
 #region ConfigureServices
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 #endregion
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("CorsPolicy", policy =>
+    {
+        policy.AllowAnyHeader().AllowAnyMethod().WithOrigins("http://localhost:3000").AllowCredentials();
+    });
+});
+
 
 builder.Services.AddAutoMapper(typeof(AutoMappingProfile));
 
@@ -67,13 +75,6 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     });
 
 builder.Services.AddHttpContextAccessor();
-builder.Services.AddCors(options =>
-{
-    options.AddPolicy("CorsPolicy", policy =>
-    {
-        policy.AllowAnyHeader().AllowAnyMethod().WithOrigins("http://localhost:3000").AllowCredentials();
-    });
-});
 
 
 builder.Services.AddScoped<ITokenService, TokenService>();
@@ -87,8 +88,6 @@ builder.Services.AddScoped<IUserServices, UserService>();
 builder.Services.AddScoped<INotifyServices, NotifyService>();
 builder.Services.AddScoped<IMessageService, MessageService>();
 
-
-
 builder.Services.AddScoped<IAuthRepository, AuthRepository>();
 builder.Services.AddScoped<IPostFeedRepository, FeedPostRepository>();
 builder.Services.AddScoped<IPostLikeRepository, PostLikeRepository>();
@@ -98,7 +97,7 @@ builder.Services.AddScoped<IUserFollowRepository, UserFollowRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<INotifyRepository, NotifyRepository>();
 builder.Services.AddScoped<IMessageRepository, MessageRepository>();
-builder.Services.AddScoped<IConversationRepository,ConversationRepository>();
+builder.Services.AddScoped<IConversationRepository, ConversationRepository>();
 
 var app = builder.Build();
 
@@ -110,7 +109,12 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseCors("CorsPolicy");
+
+app.UseAuthentication();
 app.UseAuthorization();
+
 app.MapControllers();
 
 app.Run();
