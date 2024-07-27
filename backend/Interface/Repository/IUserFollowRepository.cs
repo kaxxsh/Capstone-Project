@@ -7,7 +7,7 @@ namespace backend.Interface.Repository
         Task<UserFollow> FollowUser(string followerName, string followedId);
         Task<UserFollow> UnfollowUser(string followerName, string followedId);
         Task<bool> IsFollowing(string followerName,string followedId);
-        Task<IEnumerable<UserFollow>> GetFollowers(string followerName, string followedId);
-        Task<IEnumerable<UserFollow>> GetFollowing(string followingName, string followedId);
+        Task<IEnumerable<UserFollow>> GetFollowers(string followerName);
+        Task<IEnumerable<UserFollow>> GetFollowing(string followingName);
     }
 }

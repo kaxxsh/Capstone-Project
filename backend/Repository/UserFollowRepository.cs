@@ -37,13 +37,13 @@ namespace backend.Repository
             await _context.UserFollows.AddAsync(userFollow);
             await _context.SaveChangesAsync();
 
-            follower.FollowingCount++;
+            follower.FollowersCount++;
             await _context.SaveChangesAsync();
 
             var followedUser = await _context.Users.SingleOrDefaultAsync(u => u.Id == followedId);
             if (followedUser != null)
             {
-                followedUser.FollowersCount++;
+                followedUser.FollowingCount++;
                 await _context.SaveChangesAsync();
             }
 
@@ -65,7 +65,7 @@ namespace backend.Repository
             return userFollow;
         }
 
-        public async Task<IEnumerable<UserFollow>> GetFollowers(string followerName, string followedId)
+        public async Task<IEnumerable<UserFollow>> GetFollowers(string followerName)
         {
             var following = await _context.Users.SingleOrDefaultAsync(u => u.UserName == followerName);
             if (following == null)
@@ -81,7 +81,7 @@ namespace backend.Repository
             return userFollows;
         }
 
-        public async Task<IEnumerable<UserFollow>> GetFollowing(string followingName, string followedId)
+        public async Task<IEnumerable<UserFollow>> GetFollowing(string followingName)
         {
             var follower = await _context.Users.SingleOrDefaultAsync(u => u.UserName == followingName);
             if (follower == null)
@@ -129,14 +129,14 @@ namespace backend.Repository
 
                 if (follower.FollowingCount > 0)
                 {
-                    follower.FollowingCount--;
+                    follower.FollowersCount--;
                 }
                 await _context.SaveChangesAsync();
 
                 var followedUser = await _context.Users.SingleOrDefaultAsync(u => u.Id == followedId);
                 if (followedUser != null && followedUser.FollowersCount > 0)
                 {
-                    followedUser.FollowersCount--;
+                    followedUser.FollowingCount--;
                     await _context.SaveChangesAsync();
                 }
 

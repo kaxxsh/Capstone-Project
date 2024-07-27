@@ -57,5 +57,13 @@ namespace backend.Controllers
             var result = await services.DeleteUserAsync(id);
             return Ok(result);
         }
+
+
+        [HttpGet("Search")]
+        public async Task<IActionResult> SearchUser(string search)
+        {
+            var result = await services.SearchUserAsync(search);
+            return Ok(result);
+        }
     }
 }

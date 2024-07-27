@@ -22,6 +22,13 @@ namespace backend.Repository
 
         public async Task<Notify> GetNotificationByIdAsync(Guid id)
         {
+            var notification = await _context.Notifies.FindAsync(id);
+            if (notification != null)
+            {
+                notification.IsRead = true;
+                _context.Notifies.Update(notification);
+                await _context.SaveChangesAsync();
+            }
             return await _context.Notifies
                 .Include(n => n.FromUser)
                 .Include(n => n.User)

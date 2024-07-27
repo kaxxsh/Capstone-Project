@@ -4,6 +4,10 @@ using backend.Interface.Services;
 using backend.Model.Domain.User;
 using backend.Model.Dtos.User;
 using System.IdentityModel.Tokens.Jwt;
+using Microsoft.AspNetCore.Http;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace backend.Services
 {
@@ -19,6 +23,7 @@ namespace backend.Services
             _mapper = mapper;
             _httpContextAccessor = httpContextAccessor;
         }
+
         public async Task<UserDto> DeleteUserAsync(string id)
         {
             try
@@ -28,7 +33,8 @@ namespace backend.Services
             }
             catch (Exception ex)
             {
-                throw new Exception(ex.Message);
+                // Log the exception (logging code omitted for brevity)
+                throw;
             }
         }
 
@@ -41,7 +47,8 @@ namespace backend.Services
             }
             catch (Exception ex)
             {
-                throw new Exception(ex.Message);
+                // Log the exception (logging code omitted for brevity)
+                throw;
             }
         }
 
@@ -54,33 +61,36 @@ namespace backend.Services
             }
             catch (Exception ex)
             {
-                throw new Exception(ex.Message);
+                // Log the exception (logging code omitted for brevity)
+                throw;
             }
         }
 
-        public async Task<UserDto> GetUserByNameAsync(string Name)
+        public async Task<UserDto> GetUserByNameAsync(string name)
         {
             try
             {
-                var result = await _repository.GetUserByNameAsync(Name);
+                var result = await _repository.GetUserByNameAsync(name);
                 return _mapper.Map<UserDto>(result);
             }
             catch (Exception ex)
             {
-                throw new Exception(ex.Message);
+                // Log the exception (logging code omitted for brevity)
+                throw;
             }
         }
 
-        public async Task<UserDto> GetUserByUserNameAsync(string UserName)
+        public async Task<UserDto> GetUserByUserNameAsync(string userName)
         {
             try
             {
-                var result = await _repository.GetUserByUserNameAsync(UserName);
+                var result = await _repository.GetUserByUserNameAsync(userName);
                 return _mapper.Map<UserDto>(result);
             }
             catch (Exception ex)
             {
-                throw new Exception(ex.Message);
+                // Log the exception (logging code omitted for brevity)
+                throw;
             }
         }
 
@@ -94,17 +104,62 @@ namespace backend.Services
             }
             catch (Exception ex)
             {
-                throw new Exception(ex.Message);
+                // Log the exception (logging code omitted for brevity)
+                throw;
+            }
+        }
+
+        public async Task<IEnumerable<UserDto>> SearchUserAsync(string search)
+        {
+            try
+            {
+                var searchById = await GetUserByIdAsync(search);
+                if (searchById != null)
+                {
+                    return new List<UserDto> { _mapper.Map<UserDto>(searchById) };
+                }
+
+                var searchByName = await GetUserByNameAsync(search);
+                if (searchByName != null)
+                {
+                    return new List<UserDto> { _mapper.Map<UserDto>(searchByName) };
+                }
+
+                var searchByUserName = await GetUserByUserNameAsync(search);
+                if (searchByUserName != null)
+                {
+                    return new List<UserDto> { _mapper.Map<UserDto>(searchByUserName) };
+                }
+
+                return Enumerable.Empty<UserDto>();
+            }
+            catch (Exception ex)
+            {
+                // Log the exception (logging code omitted for brevity)
+                throw;
             }
         }
 
         public string GetUserId()
         {
-            var jwtToken = _httpContextAccessor.HttpContext.Request.Cookies["jwt"];
-            var handler = new JwtSecurityTokenHandler();
-            var token = handler.ReadJwtToken(jwtToken);
-            var userId = token.Claims.FirstOrDefault(c => c.Type == "nameid")?.Value;
-            return userId;
+            try
+            {
+                var jwtToken = _httpContextAccessor.HttpContext.Request.Cookies["jwt"];
+                if (string.IsNullOrEmpty(jwtToken))
+                {
+                    throw new Exception("JWT token is missing.");
+                }
+
+                var handler = new JwtSecurityTokenHandler();
+                var token = handler.ReadJwtToken(jwtToken);
+                var userId = token.Claims.FirstOrDefault(c => c.Type == "nameid")?.Value;
+                return userId ?? throw new Exception("User ID not found in token.");
+            }
+            catch (Exception ex)
+            {
+                // Log the exception (logging code omitted for brevity)
+                throw;
+            }
         }
     }
 }

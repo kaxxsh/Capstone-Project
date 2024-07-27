@@ -11,5 +11,6 @@ namespace backend.Interface.Services
         Task<IEnumerable<UserDto>> GetAllUsersAsync();
         Task<UserDto> UpdateUserAsync(UserRequestDto user);
         Task<UserDto> DeleteUserAsync(string id);
+        Task<IEnumerable<UserDto>> SearchUserAsync(string Search);
     }
 }

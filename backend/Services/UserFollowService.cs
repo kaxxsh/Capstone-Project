@@ -47,12 +47,7 @@ namespace backend.Services
         {
             try
             {
-                var userId = GetUserId();
-                if (string.IsNullOrEmpty(userId))
-                {
-                    throw new Exception("User is not authenticated or Logined User.");
-                }
-                var result = await _repository.GetFollowers(followerName, userId);
+                var result = await _repository.GetFollowers(followerName);
                 return result.Select(r => new UserFollowDto
                 {
                     UserId = r.FollowedUserId,
@@ -69,12 +64,7 @@ namespace backend.Services
         {
             try
             {
-                var userId = GetUserId();
-                if (string.IsNullOrEmpty(userId))
-                {
-                    throw new Exception("User is not authenticated or Logined User.");
-                }
-                var result = await _repository.GetFollowing(followingName, userId);
+                var result = await _repository.GetFollowing(followingName);
                 return result.Select(r => new UserFollowDto
                 {
                     UserId = r.FollowerUserId,
