@@ -8,5 +8,6 @@ namespace backend.Interface.Repository
         Task<IEnumerable<PostRetweet>> GetRetweetsByUserAsync(string userId);
         Task<Hashtag> GetOrCreateHashtagAsync(string tag);
         Task<IEnumerable<PostFeed>> GetPostsByHashtagAsync(string hashtag);
+        Task<IEnumerable<Hashtag>> GetAllHashtagsAsync();
     }
 }

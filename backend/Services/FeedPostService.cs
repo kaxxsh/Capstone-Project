@@ -42,7 +42,6 @@ namespace backend.Services
                 post.DateCreated = DateTime.Now;
                 post.DateUpdated = DateTime.Now;
 
-                // Process hashtags
                 foreach (var tag in postFeedRequestDto.Hashtags)
                 {
                     var hashtag = await _repository.GetOrCreateHashtagAsync(tag);
@@ -178,5 +177,10 @@ namespace backend.Services
             return _mapper.Map<IEnumerable<PostFeedResponseDto>>(posts);
         }
 
+        public async Task<IEnumerable<HashTagDto>> GetAllHashtagsAsync()
+        {
+            var hashtags = await _repository.GetAllHashtagsAsync();
+            return _mapper.Map<IEnumerable<HashTagDto>>(hashtags);
+        }
     }
 }

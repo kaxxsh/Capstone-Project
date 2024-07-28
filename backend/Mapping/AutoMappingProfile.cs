@@ -19,7 +19,17 @@ namespace backend.Mapping
     {
         public AutoMappingProfile()
         {
-            CreateMap<UserDetails, UserDto>().ReverseMap();
+            CreateMap<UserDetails, UserDto>()
+                .ForMember(dest => dest.Followers, opt => opt.MapFrom(src => src.Followers.Select(f => new UserFollowDto
+                {
+                    UserId = f.FollowerUserId,
+                    UserName = f.FollowerUser.UserName
+                })))
+                .ForMember(dest => dest.Following, opt => opt.MapFrom(src => src.Following.Select(f => new UserFollowDto
+                {
+                    UserId = f.FollowedUserId,
+                    UserName = f.FollowedUser.UserName
+                })));
 
             CreateMap<UserDetails, UserResponseDto>().ReverseMap();
             CreateMap<UserDetails, UserRequestDto>().ReverseMap();
@@ -29,16 +39,12 @@ namespace backend.Mapping
                 .ForMember(dest => dest.PostRetweets, opt => opt.MapFrom(src => src.PostRetweets));
             CreateMap<PostFeedRequestDto, PostFeed>().ReverseMap();
             CreateMap<PostLike, LikePostResponseDto>().ReverseMap();
-            CreateMap<PostComment, PostCommentResponseDto>()
-                .ReverseMap();
+            CreateMap<PostComment, PostCommentResponseDto>().ReverseMap();
             CreateMap<PostCommentRequestDto, PostComment>().ReverseMap();
-            CreateMap<PostRetweet, PostRetweetResponseDto>()
-                .ReverseMap();
+            CreateMap<PostRetweet, PostRetweetResponseDto>().ReverseMap();
             CreateMap<PostRetweetRequestDto, PostRetweet>().ReverseMap();
-            CreateMap<PostRetweet, PostRetweetDto>()
-                .ReverseMap();
-            CreateMap<UserFollow, UserFollowDto>().ReverseMap();
-
+            CreateMap<PostRetweet, PostRetweetDto>().ReverseMap();
+            CreateMap<UserFollow, UserFollowDto>();
             CreateMap<Notify, NotifyRequestDto>().ReverseMap();
             CreateMap<Notify, NotifyResponseDto>()
                 .ForMember(dest => dest.FromUserName, opt => opt.MapFrom(src => src.FromUser.UserName))
@@ -57,12 +63,12 @@ namespace backend.Mapping
                 .ForMember(dest => dest.ConversationId, opt => opt.MapFrom(src => src.ConversationId))
                 .ForMember(dest => dest.CreatedAt, opt => opt.MapFrom(src => src.Conversation.CreatedAt))
                 .ForMember(dest => dest.Messages, opt => opt.MapFrom(src => src.Conversation.Messages));
-
             CreateMap<Conversation, ConversationUserDto>()
                 .ForMember(dest => dest.ConversationId, opt => opt.MapFrom(src => src.ConversationId))
                 .ForMember(dest => dest.User1Name, opt => opt.MapFrom(src => src.UserConversations.FirstOrDefault().User.Name))
                 .ForMember(dest => dest.User2Name, opt => opt.MapFrom(src => src.UserConversations.Skip(1).FirstOrDefault().User.Name));
+
+            CreateMap<Hashtag, HashTagDto>();
         }
     }
-
 }

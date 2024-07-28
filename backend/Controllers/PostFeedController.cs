@@ -81,6 +81,13 @@ namespace backend.Controllers
             return Ok(posts);
         }
 
+        [HttpGet("hashtags")]
+        public async Task<IActionResult> GetAllHashtags()
+        {
+            var hashtags = await _services.GetAllHashtagsAsync();
+            return Ok(hashtags);
+        }
+
 
     }
 }

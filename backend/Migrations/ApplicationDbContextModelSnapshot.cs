@@ -278,6 +278,9 @@ namespace backend.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<int>("Count")
+                        .HasColumnType("int");
+
                     b.Property<string>("Tag")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");

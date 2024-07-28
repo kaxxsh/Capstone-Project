@@ -1,4 +1,6 @@
-﻿namespace backend.Model.Dtos.User
+﻿using backend.Model.Dtos.User.UserFollow;
+
+namespace backend.Model.Dtos.User
 {
     public class UserResponseDto
     {

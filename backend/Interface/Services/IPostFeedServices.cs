@@ -11,5 +11,6 @@ namespace backend.Interface.Services
         Task<bool> DeletePostAsync(Guid postId);
         Task<List<CombinedPostViewModel>> GetUserPostsAndRetweets(string userId);
         Task<IEnumerable<PostFeedResponseDto>> GetPostsByHashtagAsync(string hashtag);
+        Task<IEnumerable<HashTagDto>> GetAllHashtagsAsync();
     }
 }

@@ -163,6 +163,20 @@ namespace backend.Context
                 .WithMany(h => h.PostHashtags)
                 .HasForeignKey(ph => ph.HashtagId)
                 .OnDelete(DeleteBehavior.Cascade);
+
+            // Configure UserDetails and UserFollow relationship
+            builder.Entity<UserDetails>()
+                .HasMany(u => u.Followers)
+                .WithOne(f => f.FollowedUser)
+                .HasForeignKey(f => f.FollowedUserId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            builder.Entity<UserDetails>()
+                .HasMany(u => u.Following)
+                .WithOne(f => f.FollowerUser)
+                .HasForeignKey(f => f.FollowerUserId)
+                .OnDelete(DeleteBehavior.Restrict);
         }
+
     }
 }

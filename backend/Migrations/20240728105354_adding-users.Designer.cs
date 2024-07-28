@@ -12,8 +12,8 @@ using backend.Context;
 namespace backend.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240726123755_init")]
-    partial class init
+    [Migration("20240728105354_adding-users")]
+    partial class addingusers
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -275,6 +275,24 @@ namespace backend.Migrations
                     b.ToTable("Notifies");
                 });
 
+            modelBuilder.Entity("backend.Model.Domain.Post.Hashtag", b =>
+                {
+                    b.Property<Guid>("HashtagId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Tag")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("HashtagId");
+
+                    b.HasIndex("Tag")
+                        .IsUnique();
+
+                    b.ToTable("Hashtags");
+                });
+
             modelBuilder.Entity("backend.Model.Domain.Post.PostComment", b =>
                 {
                     b.Property<Guid>("PostCommentId")
@@ -340,6 +358,21 @@ namespace backend.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("Posts");
+                });
+
+            modelBuilder.Entity("backend.Model.Domain.Post.PostHashtag", b =>
+                {
+                    b.Property<Guid>("PostId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("HashtagId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("PostId", "HashtagId");
+
+                    b.HasIndex("HashtagId");
+
+                    b.ToTable("PostHashtags");
                 });
 
             modelBuilder.Entity("backend.Model.Domain.Post.PostLike", b =>
@@ -646,6 +679,25 @@ namespace backend.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("backend.Model.Domain.Post.PostHashtag", b =>
+                {
+                    b.HasOne("backend.Model.Domain.Post.Hashtag", "Hashtag")
+                        .WithMany("PostHashtags")
+                        .HasForeignKey("HashtagId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("backend.Model.Domain.Post.PostFeed", "Post")
+                        .WithMany("PostHashtags")
+                        .HasForeignKey("PostId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Hashtag");
+
+                    b.Navigation("Post");
+                });
+
             modelBuilder.Entity("backend.Model.Domain.Post.PostLike", b =>
                 {
                     b.HasOne("backend.Model.Domain.Post.PostFeed", "Post")
@@ -691,9 +743,16 @@ namespace backend.Migrations
                     b.Navigation("UserConversations");
                 });
 
+            modelBuilder.Entity("backend.Model.Domain.Post.Hashtag", b =>
+                {
+                    b.Navigation("PostHashtags");
+                });
+
             modelBuilder.Entity("backend.Model.Domain.Post.PostFeed", b =>
                 {
                     b.Navigation("PostComments");
+
+                    b.Navigation("PostHashtags");
 
                     b.Navigation("PostLikes");
 

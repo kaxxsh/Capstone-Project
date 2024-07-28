@@ -8,6 +8,7 @@ namespace backend.Model.Dtos.User
     {
         public string Id { get; set; }
         public string Name { get; set; }
+        public string UserName { get; set; }
         public string ProfileImage { get; set; }
         public string Bio { get; set; }
         public string Location { get; set; }
@@ -16,5 +17,7 @@ namespace backend.Model.Dtos.User
         public DateOnly DateOfBirth { get; set; }
         public DateTime JoinDate { get; set; } = DateTime.Now;
         public string Gender { get; set; }
+        public ICollection<UserFollowDto> Followers { get; set; }
+        public ICollection<UserFollowDto> Following { get; set; }
     }
 }

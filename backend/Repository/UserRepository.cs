@@ -38,22 +38,22 @@ namespace backend.Repository
 
         public async Task<IEnumerable<UserDetails>> GetAll()
         {
-            return await _context.UserDetails.ToListAsync();
+            return await _context.UserDetails.Include(x => x.Followers).Include(x => x.Following).ToListAsync();
         }
 
         public async Task<UserDetails> GetById(string id)
         {
-            return await _context.UserDetails.FirstOrDefaultAsync(x => x.Id == id);
+            return await _context.UserDetails.Include(x => x.Followers).ThenInclude(xs => xs.FollowerUser).Include(x => x.Following).ThenInclude(xs => xs.FollowedUser).FirstOrDefaultAsync(x => x.Id == id);
         }
 
         public async Task<UserDetails> GetUserByNameAsync(string Name)
         {
-            return await _context.UserDetails.FirstOrDefaultAsync(x => x.Name == Name);
+            return await _context.UserDetails.Include(x => x.Followers).ThenInclude(xs => xs.FollowerUser).Include(x => x.Following).ThenInclude(xs => xs.FollowedUser).FirstOrDefaultAsync(x => x.Name == Name);
         }
 
         public async Task<UserDetails> GetUserByUserNameAsync(string UserName)
         {
-            return await _context.UserDetails.FirstOrDefaultAsync(x => x.UserName == UserName);
+            return await _context.UserDetails.Include(x => x.Followers).ThenInclude(xs => xs.FollowerUser).Include(x => x.Following).ThenInclude(xs=> xs.FollowedUser).FirstOrDefaultAsync(x => x.UserName == UserName);
         }
 
         public async Task<UserDetails> Update(string id, UserDetails entity)

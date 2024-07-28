@@ -12,8 +12,8 @@ using backend.Context;
 namespace backend.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240726191354_hash-tag")]
-    partial class hashtag
+    [Migration("20240728111905_adding")]
+    partial class adding
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -280,6 +280,9 @@ namespace backend.Migrations
                     b.Property<Guid>("HashtagId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("Count")
+                        .HasColumnType("int");
 
                     b.Property<string>("Tag")
                         .IsRequired()

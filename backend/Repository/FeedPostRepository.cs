@@ -128,6 +128,8 @@ namespace backend.Repository
                 _context.Hashtags.Add(hashtag);
                 await _context.SaveChangesAsync();
             }
+            hashtag.Count++;
+            await _context.SaveChangesAsync();
             return hashtag;
         }
 
@@ -144,5 +146,9 @@ namespace backend.Repository
                 .ToListAsync();
         }
 
+        public async Task<IEnumerable<Hashtag>> GetAllHashtagsAsync()
+        {
+            return await _context.Hashtags.OrderByDescending(x => x.Count).ToListAsync();
+        }
     }
 }

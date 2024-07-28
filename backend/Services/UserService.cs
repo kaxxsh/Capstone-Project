@@ -33,7 +33,6 @@ namespace backend.Services
             }
             catch (Exception ex)
             {
-                // Log the exception (logging code omitted for brevity)
                 throw;
             }
         }
@@ -47,7 +46,6 @@ namespace backend.Services
             }
             catch (Exception ex)
             {
-                // Log the exception (logging code omitted for brevity)
                 throw;
             }
         }
@@ -61,7 +59,6 @@ namespace backend.Services
             }
             catch (Exception ex)
             {
-                // Log the exception (logging code omitted for brevity)
                 throw;
             }
         }
@@ -75,7 +72,6 @@ namespace backend.Services
             }
             catch (Exception ex)
             {
-                // Log the exception (logging code omitted for brevity)
                 throw;
             }
         }
@@ -89,7 +85,6 @@ namespace backend.Services
             }
             catch (Exception ex)
             {
-                // Log the exception (logging code omitted for brevity)
                 throw;
             }
         }
@@ -104,7 +99,6 @@ namespace backend.Services
             }
             catch (Exception ex)
             {
-                // Log the exception (logging code omitted for brevity)
                 throw;
             }
         }
@@ -135,7 +129,6 @@ namespace backend.Services
             }
             catch (Exception ex)
             {
-                // Log the exception (logging code omitted for brevity)
                 throw;
             }
         }
@@ -157,7 +150,6 @@ namespace backend.Services
             }
             catch (Exception ex)
             {
-                // Log the exception (logging code omitted for brevity)
                 throw;
             }
         }

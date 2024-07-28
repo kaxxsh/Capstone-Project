@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace backend.Migrations
 {
     /// <inheritdoc />
-    public partial class init : Migration
+    public partial class addingusers : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -69,6 +69,18 @@ namespace backend.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Conversations", x => x.ConversationId);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Hashtags",
+                columns: table => new
+                {
+                    HashtagId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Tag = table.Column<string>(type: "nvarchar(450)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Hashtags", x => x.HashtagId);
                 });
 
             migrationBuilder.CreateTable(
@@ -360,6 +372,30 @@ namespace backend.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "PostHashtags",
+                columns: table => new
+                {
+                    PostId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    HashtagId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_PostHashtags", x => new { x.PostId, x.HashtagId });
+                    table.ForeignKey(
+                        name: "FK_PostHashtags_Hashtags_HashtagId",
+                        column: x => x.HashtagId,
+                        principalTable: "Hashtags",
+                        principalColumn: "HashtagId",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_PostHashtags_Posts_PostId",
+                        column: x => x.PostId,
+                        principalTable: "Posts",
+                        principalColumn: "PostId",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Retweets",
                 columns: table => new
                 {
@@ -436,6 +472,12 @@ namespace backend.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Hashtags_Tag",
+                table: "Hashtags",
+                column: "Tag",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Likes_PostId",
                 table: "Likes",
                 column: "PostId");
@@ -464,6 +506,11 @@ namespace backend.Migrations
                 name: "IX_Notifies_UserId",
                 table: "Notifies",
                 column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_PostHashtags_HashtagId",
+                table: "PostHashtags",
+                column: "HashtagId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Posts_UserId",
@@ -527,6 +574,9 @@ namespace backend.Migrations
                 name: "Notifies");
 
             migrationBuilder.DropTable(
+                name: "PostHashtags");
+
+            migrationBuilder.DropTable(
                 name: "Retweets");
 
             migrationBuilder.DropTable(
@@ -537,6 +587,9 @@ namespace backend.Migrations
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
+
+            migrationBuilder.DropTable(
+                name: "Hashtags");
 
             migrationBuilder.DropTable(
                 name: "Posts");
