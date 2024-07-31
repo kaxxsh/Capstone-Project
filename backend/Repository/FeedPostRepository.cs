@@ -119,6 +119,19 @@ namespace backend.Repository
                 .ToListAsync();
         }
 
+        public async Task<IEnumerable<PostRetweet>> GetAllRetweet()
+        {
+            return await _context.Retweets
+                .Include(r => r.PostFeed)
+                    .ThenInclude(pf => pf.User)
+                .Include(r => r.PostFeed.PostComments)
+                    .ThenInclude(pc => pc.User)
+                .Include(r => r.PostFeed.PostLikes)
+                    .ThenInclude(pl => pl.User)
+                .Include(userId => userId.User)
+                .ToListAsync();
+        }
+
         public async Task<Hashtag> GetOrCreateHashtagAsync(string tag)
         {
             var hashtag = await _context.Hashtags.FirstOrDefaultAsync(h => h.Tag == tag);
@@ -149,6 +162,20 @@ namespace backend.Repository
         public async Task<IEnumerable<Hashtag>> GetAllHashtagsAsync()
         {
             return await _context.Hashtags.OrderByDescending(x => x.Count).ToListAsync();
+        }
+
+        public async Task<IEnumerable<PostFeed>> GetPostsByUserFollowed(string userId)
+        {
+            return await _context.Posts
+                .Where(p => _context.UserFollows.Any(f => f.FollowerUserId == userId && f.FollowedUserId == p.UserId))
+                .Include(p => p.User)
+                .Include(p => p.PostComments)
+                .Include(p => p.PostLikes)
+                .Include(p => p.PostRetweets)
+                    .ThenInclude(pr => pr.User)
+                .OrderByDescending(p => p.DateCreated)
+                .ToListAsync();
+
         }
     }
 }

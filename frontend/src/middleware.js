@@ -3,9 +3,9 @@ import { NextResponse } from "next/server";
 export async function middleware(req) {
   const res = NextResponse.next();
 
-  if (req.nextUrl.pathname === "/user") {
+  if (req.nextUrl.pathname === "/User" || req.nextUrl.pathname === "/User/explore" || req.nextUrl.pathname === "/User/notification" || req.nextUrl.pathname === "/User/message" || req.nextUrl.pathname === "/User/profile") {
     try {
-      const token = req.cookies.get("token")?.value;
+      const token = req.cookies.get("jwt")?.value;
       if (!token) {
         return NextResponse.redirect(new URL("/login", req.url));
       }
@@ -17,9 +17,9 @@ export async function middleware(req) {
   
   if (req.nextUrl.pathname === "/login") {
     try {
-      const token = req.cookies.get("token")?.value;
+      const token = req.cookies.get("jwt")?.value;
       if (token) {
-        return NextResponse.redirect(new URL("/user", req.url));
+        return NextResponse.redirect(new URL("/User", req.url));
       }
     } catch (error) {
       console.log(error);

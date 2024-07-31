@@ -63,7 +63,7 @@ namespace backend.Controllers
             return result ? NoContent() : NotFound();
         }
 
-        [HttpGet("GetPostByUser{UserID}")]
+        [HttpGet("GetPostByUser/{UserID}")]
         public async Task<IActionResult> GetPostByUserAsync(string UserID)
         {
             var post = await _services.GetUserPostsAndRetweets(UserID);
@@ -88,6 +88,18 @@ namespace backend.Controllers
             return Ok(hashtags);
         }
 
+        [HttpGet("GetPostByUserFollowed")]
+        public async Task<IActionResult> GetPostByUserFollowed()
+        {
+            var posts = await _services.GetPostsByUserFollowed();
+            return Ok(posts);
+        }
 
+        [HttpGet("GetAllPostsAndRetweets")]
+        public async Task<IActionResult> GetAllPostsAndRetweets()
+        {
+            var posts = await _services.GetAllPostsAndRetweets();
+            return Ok(posts);
+        }
     }
 }

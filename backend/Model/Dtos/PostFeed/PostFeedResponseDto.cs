@@ -3,6 +3,7 @@ using backend.Model.Domain.User;
 using backend.Model.Dtos.PostFeed.CommentPost;
 using backend.Model.Dtos.PostFeed.LikePost;
 using backend.Model.Dtos.PostFeed.RetweetPost;
+using backend.Model.Dtos.User;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace backend.Model.Dtos.PostFeed
@@ -18,6 +19,7 @@ namespace backend.Model.Dtos.PostFeed
         public int CommentsCount { get; set; }
         public int RetweetsCount { get; set; }
         public string UserId { get; set; }
+        public UserResponseDto User { get; set; }
         public ICollection<PostCommentResponseDto> PostComments { get; set; }
         public ICollection<LikePostResponseDto> PostLikes { get; set; }
         public ICollection<PostRetweetDto> PostRetweets { get; set; }

@@ -38,8 +38,14 @@ namespace backend.Mapping
                 .ForMember(dest => dest.PostComments, opt => opt.MapFrom(src => src.PostComments))
                 .ForMember(dest => dest.PostRetweets, opt => opt.MapFrom(src => src.PostRetweets));
             CreateMap<PostFeedRequestDto, PostFeed>().ReverseMap();
-            CreateMap<PostLike, LikePostResponseDto>().ReverseMap();
-            CreateMap<PostComment, PostCommentResponseDto>().ReverseMap();
+            CreateMap<PostLike, LikePostResponseDto>()
+                .ForMember(dest => dest.UserName, opt => opt.MapFrom(src => src.User.UserName))
+                .ReverseMap();
+            CreateMap<PostComment, PostCommentResponseDto>()
+                .ForMember(dest => dest.ProfileImage, opt => opt.MapFrom(src => src.User.ProfileImage))
+                .ForMember(dest => dest.UserName, opt => opt.MapFrom(src => src.User.UserName))
+                .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.User.Name))
+                .ReverseMap();
             CreateMap<PostCommentRequestDto, PostComment>().ReverseMap();
             CreateMap<PostRetweet, PostRetweetResponseDto>().ReverseMap();
             CreateMap<PostRetweetRequestDto, PostRetweet>().ReverseMap();

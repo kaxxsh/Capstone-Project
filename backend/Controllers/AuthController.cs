@@ -40,5 +40,12 @@ namespace backend.Controllers
 
             return Ok(result);
         }
+
+        [HttpPost("Logout")]
+        public async Task<IActionResult> Logout()
+        {
+            await _authServices.LogoutAsync();
+            return Ok();
+        }
     }
 }

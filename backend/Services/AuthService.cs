@@ -71,6 +71,19 @@ namespace backend.Services
 
         }
 
+        public async Task LogoutAsync()
+        {
+            try
+            {
+                _httpContextAccessor.HttpContext.Response.Cookies.Delete("jwt");
+                return;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
         private void SetTokenCookie(string token)
         {
             var cookieOptions = new CookieOptions

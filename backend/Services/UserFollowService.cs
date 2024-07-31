@@ -52,6 +52,10 @@ namespace backend.Services
                 {
                     UserId = r.FollowedUserId,
                     UserName = r.FollowedUser.UserName,
+                    Name = r.FollowedUser.Name,
+                    ProfileImage = r.FollowedUser.ProfileImage,
+                    IsFollowed = IsFollowingAsync(r.FollowedUser.UserName).Result,
+                    Bio = r.FollowedUser.Bio
                 });
             }
             catch (Exception e)
@@ -69,6 +73,10 @@ namespace backend.Services
                 {
                     UserId = r.FollowerUserId,
                     UserName = r.FollowerUser.UserName,
+                    Name = r.FollowerUser.Name,
+                    ProfileImage = r.FollowerUser.ProfileImage,
+                    IsFollowed = IsFollowingAsync(r.FollowerUser.UserName).Result,
+                    Bio = r.FollowerUser.Bio
                 });
             }
             catch (Exception e)

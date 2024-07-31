@@ -87,7 +87,7 @@ const SearchComponent = () => {
     <section className="hidden lg:inline">
       <div
         className={`flex items-center border ${
-          isFocused ? "border-blue-600" : "border-zinc-800"
+          isFocused ? "border-blue-600" : "border-gray-800"
         } rounded-3xl py-2 px-6 w-80 mt-4`}
       >
         <FaSearch

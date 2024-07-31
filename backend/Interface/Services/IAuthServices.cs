@@ -7,5 +7,6 @@ namespace backend.Interface.Services
     {
         Task<UserResponseDto> LoginAsync(LoginRequestDto loginRequestDto);
         Task<UserResponseDto> RegisterAsync(RegisterRequestDto registerRequestDto);
+        Task LogoutAsync();
     }
 }

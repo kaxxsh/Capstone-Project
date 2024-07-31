@@ -170,6 +170,41 @@ namespace backend.Services
             }
 
         }
+        public async Task<List<CombinedPostViewModel>> GetAllPostsAndRetweets()
+        {
+            try
+            {
+                var originalPosts = await _repository.GetAll();
+                var originalPostViewModels = originalPosts.Select(post => new CombinedPostViewModel
+                {
+                    Post = _mapper.Map<PostFeedResponseDto>(post),
+                    IsRetweet = false,
+                    RetweetContent = null,
+                    RetweetedBy = null
+                }).ToList();
+
+                var retweetedPosts = await _repository.GetAllRetweet();
+                var retweetPostViewModels = retweetedPosts.Select(retweet => new CombinedPostViewModel
+                {
+                    Post = _mapper.Map<PostFeedResponseDto>(retweet.PostFeed),
+                    IsRetweet = true,
+                    RetweetContent = retweet.RetweetContent,
+                    RetweetedBy = retweet.User.UserName
+                }).ToList();
+
+                var allPosts = originalPostViewModels.Concat(retweetPostViewModels)
+                                                     .OrderByDescending(p => p.Post.DateCreated)
+                                                     .ToList();
+
+                return allPosts;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+
+        }
+
 
         public async Task<IEnumerable<PostFeedResponseDto>> GetPostsByHashtagAsync(string hashtag)
         {
@@ -181,6 +216,17 @@ namespace backend.Services
         {
             var hashtags = await _repository.GetAllHashtagsAsync();
             return _mapper.Map<IEnumerable<HashTagDto>>(hashtags);
+        }
+
+        public async Task<IEnumerable<PostFeedResponseDto>> GetPostsByUserFollowed()
+        {
+            var jwtToken = _httpContextAccessor.HttpContext.Request.Cookies["jwt"];
+            var handler = new JwtSecurityTokenHandler();
+            var token = handler.ReadJwtToken(jwtToken);
+            var userId = token.Claims.FirstOrDefault(c => c.Type == "nameid")?.Value;
+
+            var posts = await _repository.GetPostsByUserFollowed(userId);
+            return _mapper.Map<IEnumerable<PostFeedResponseDto>>(posts);
         }
     }
 }

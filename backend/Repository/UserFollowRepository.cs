@@ -127,14 +127,12 @@ namespace backend.Repository
                 _context.UserFollows.Remove(userFollow);
                 await _context.SaveChangesAsync();
 
-                if (follower.FollowingCount > 0)
-                {
-                    follower.FollowersCount--;
-                }
+
+                follower.FollowersCount--;
                 await _context.SaveChangesAsync();
 
                 var followedUser = await _context.Users.SingleOrDefaultAsync(u => u.Id == followedId);
-                if (followedUser != null && followedUser.FollowersCount > 0)
+                if (followedUser != null)
                 {
                     followedUser.FollowingCount--;
                     await _context.SaveChangesAsync();

@@ -70,9 +70,9 @@ namespace backend.Controllers
             var result = await service.IsFollowingAsync(followerName);
             if (result == true)
             {
-                return Ok("User is Following");
+                return Ok(true);
             }
-            return BadRequest("User is not Following");
+            return Ok(false);
         }
     }
 }

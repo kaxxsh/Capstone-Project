@@ -5,15 +5,19 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body>
-        <div className="lg:flex lg:w-full lg:justify-center lg:h-screen">
-          <div className="w-[80%] lg:flex lg:h-full lg:justify-between">
-            <div className="lg:w-[20%] border-r border-zinc-800 flex-shrink-0">
+        <script
+          async
+          src="https://unpkg.com/@material-tailwind/html@latest/scripts/ripple.js"
+        ></script>
+        <div className="lg:flex lg:w-full lg:justify-center lg:h-screen no-scrollbar font-mono font-extralight">
+          <div className="lg:w-[70%] lg:flex lg:h-full lg:justify-between">
+            <div className="lg:w-[20%]  flex-shrink-0 pr-4">
               <Nav />
             </div>
-            <main className="lg:w-full lg:overflow-y-auto lg:no-scrollbar">
+            <main className="w-full lg:w-[50%] overflow-y-auto no-scrollbar lg:mx-6 border-x border-gray-700">
               {children}
             </main>
-            <div className="lg:w-[60%] flex justify-center border-l border-zinc-800">
+            <div className="hidden lg:inline lg:w-[30%] flex justify-center">
               <Search />
             </div>
           </div>

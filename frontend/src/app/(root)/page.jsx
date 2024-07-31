@@ -4,8 +4,9 @@ import Image from "next/image";
 import { TypeAnimation } from "react-type-animation";
 
 export default function Home() {
+
   return (
-    <section className="min-h-screen flex flex-col items-center justify-center">
+    <section className="min-h-screen flex flex-col items-center justify-center relative bg-gradient-to-r from-slate-900 to-slate-700">
       <div className="my-8">
         <span className="w-full">
           <Image src="/Logo.png" alt="Kratos" width={400} height={95} />
@@ -25,7 +26,7 @@ export default function Home() {
         wrapper="span"
         speed={50}
         repeat={Infinity}
-        className="font-extrabold mb-4 sm:text-[2.5em]"
+        className="font-extrabold mb-4 sm:text-[2.5em] bg-gradient-to-r from-indigo-400 to-cyan-400 bg-clip-text text-transparent"
       />
       <div className="flex flex-col items-center justify-evenly">
         <label className="text-lg font-medium mb-2 hover:text-orange-400">

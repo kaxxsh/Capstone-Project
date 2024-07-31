@@ -5,11 +5,9 @@ const Notification = async () => {
     `${BASE_URL}/api/Notification/user/2e4f85cd-a264-4552-be14-f8b56f877a2f`
   ).then((res) => res.json());
 
-  console.log(data);
-
   return (
     <section className="w-full text-white rounded-lg shadow-md">
-      <h1 className="text-2xl font-bold mb-4 p-4 border-b border-gray-700">
+      <h1 className="text-2xl font-bold mb-4 p-4">
         Notifications
       </h1>
       <div className="">

@@ -9,5 +9,7 @@ namespace backend.Interface.Repository
         Task<Hashtag> GetOrCreateHashtagAsync(string tag);
         Task<IEnumerable<PostFeed>> GetPostsByHashtagAsync(string hashtag);
         Task<IEnumerable<Hashtag>> GetAllHashtagsAsync();
+        Task<IEnumerable<PostFeed>> GetPostsByUserFollowed(string userId);
+        Task<IEnumerable<PostRetweet>> GetAllRetweet();
     }
 }
