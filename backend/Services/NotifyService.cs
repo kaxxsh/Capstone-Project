@@ -29,7 +29,9 @@ namespace backend.Services
                 FromUserId = GetUserId(),
                 UserId = notifyRequestDto.UserId,
                 DateCreated = DateTime.UtcNow,
-                IsRead = false
+                IsRead = false,
+                PostId = notifyRequestDto.PostId
+
             };
 
             return await _notifyRepository.CreateNotificationAsync(notification);

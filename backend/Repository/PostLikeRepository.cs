@@ -63,7 +63,8 @@ namespace backend.Repository
                     var notification = new NotifyRequestDto
                     {
                         UserId = post.UserId,
-                        Content = "You unliked a post."
+                        Content = "You unliked a post.",
+                        PostId = postId
                     };
                     await _services.CreateNotificationAsync(notification);
 
@@ -83,7 +84,8 @@ namespace backend.Repository
                 var notificationDto = new NotifyRequestDto
                 {
                     UserId = updatedPost.UserId,
-                    Content = "You liked a post."
+                    Content = "You liked a post.",
+                    PostId = postId
                 };
 
                 await _services.CreateNotificationAsync(notificationDto);

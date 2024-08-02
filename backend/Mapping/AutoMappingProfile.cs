@@ -55,6 +55,7 @@ namespace backend.Mapping
             CreateMap<Notify, NotifyResponseDto>()
                 .ForMember(dest => dest.FromUserName, opt => opt.MapFrom(src => src.FromUser.UserName))
                 .ForMember(dest => dest.UserName, opt => opt.MapFrom(src => src.User.UserName))
+                .ForMember(dest => dest.PostId, opt => opt.MapFrom(src => src.PostId))
                 .ReverseMap();
             CreateMap<Message, MessageDto>()
                 .ForMember(dest => dest.UserName, opt => opt.MapFrom(src => src.Sender.Name))

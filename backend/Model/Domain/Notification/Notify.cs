@@ -1,4 +1,5 @@
-﻿using backend.Model.Domain.User;
+﻿using backend.Model.Domain.Post;
+using backend.Model.Domain.User;
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -24,7 +25,7 @@ namespace backend.Model.Domain.Notification
         [ForeignKey("User")]
         public string UserId { get; set; }
         public UserDetails User { get; set; }
-
+        public Guid? PostId { get; set; }
         public Notify()
         {
             DateCreated = DateTime.UtcNow;

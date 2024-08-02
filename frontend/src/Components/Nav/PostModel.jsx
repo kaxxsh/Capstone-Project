@@ -135,8 +135,8 @@ const PostModel = ({ onClose }) => {
   };
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-      <div className="bg-white rounded-lg shadow-lg p-6 max-w-lg w-full text-black">
+    <div className="fixed inset-0 flex items-center justify-center bg-secondary-600 bg-opacity-40 z-100 -top-5">
+      <div className="bg-black rounded-lg shadow-lg p-6 max-w-lg w-full text-black">
         <div className="mb-4">
           <button
             onClick={onClose}
@@ -170,7 +170,7 @@ const PostModel = ({ onClose }) => {
                 <input
                   type="text"
                   placeholder="What's happening?"
-                  className="bg-gray-100 border border-gray-300 text-black placeholder-gray-500 rounded-lg p-2 w-full"
+                  className="bg-black border border-gray-300 text-white placeholder-gray-500 rounded-lg p-2 w-full"
                   value={inputValue}
                   onChange={handleInputChange}
                 />

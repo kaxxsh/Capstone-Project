@@ -66,7 +66,7 @@ const UserProfileModal = ({ userData, isOpen, onClose, onUpdate }) => {
 
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-80 overflow-y-auto no-scrollbar">
-      <div className="relative bg-gray-800 text-white rounded-lg shadow-lg w-full max-w-3xl p-6 space-y-4">
+      <div className="relative bg-black text-white rounded-lg shadow-lg w-full max-w-3xl p-6 space-y-4">
         <button
           onClick={onClose}
           className="absolute lg:top-4  lg:right-4 text-gray-400 hover:text-white focus:outline-none"

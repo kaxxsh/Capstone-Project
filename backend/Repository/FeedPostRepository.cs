@@ -27,6 +27,7 @@ namespace backend.Repository
             {
                 UserId = entity.UserId,
                 Content = "You have a new post",
+                PostId = entity.PostId,
             };
             await _notify.CreateNotificationAsync(notification);
             return entity;
@@ -47,6 +48,7 @@ namespace backend.Repository
             {
                 UserId = post.UserId,
                 Content = "Your post has been deleted",
+                PostId = post.PostId,
             };
             await _notify.CreateNotificationAsync(notification);
             return post;
@@ -92,6 +94,7 @@ namespace backend.Repository
             {
                 UserId = post.UserId,
                 Content = "Your post has been updated",
+                PostId = post.PostId,
             };
             return post;
         }

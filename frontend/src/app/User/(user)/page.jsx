@@ -80,11 +80,11 @@ const UserPage = () => {
 
   return (
     <section className="text-sm lg:text-base">
-      <div className="h-12 lg:h-16 flex justify-around items-center p-4 lg:p-6 border-b border-gray-700 font-bold text-zinc-500">
+      <div className="h-12 lg:h-16 flex justify-around items-center p-4 lg:p-6 border-b border-gray-700 font-bold text-gray-500">
         <div
-          className={`h-12 lg:h-16 flex-1 flex justify-center items-center cursor-pointer hover:text-zinc-800 ${
+          className={`h-12 lg:h-16 flex-1 flex justify-center items-center cursor-pointer hover:text-gray-800 ${
             activeTab === "forYou"
-              ? "border-b-4 border-blue-500 text-zinc-300"
+              ? "border-b-4 border-blue-500 text-gray-300"
               : ""
           }`}
           onClick={() => setActiveTab("forYou")}
@@ -92,9 +92,9 @@ const UserPage = () => {
           <span>For You</span>
         </div>
         <div
-          className={`h-12 lg:h-16 flex-1 flex justify-center items-center cursor-pointer hover:text-zinc-300 ${
+          className={`h-12 lg:h-16 flex-1 flex justify-center items-center cursor-pointer hover:text-gray-300 ${
             activeTab === "following"
-              ? "border-b-4 border-blue-500 text-zinc-300"
+              ? "border-b-4 border-blue-500 text-gray-300"
               : ""
           }`}
           onClick={() => setActiveTab("following")}
@@ -107,7 +107,7 @@ const UserPage = () => {
       </div>
       <div className="">
         {isLoading ? (
-          <div className="p-4 space-y-4">
+          <div className="p-4 space-y-2">
             {[...Array(5)].map((_, index) => (
               <PostSkeleton key={index} />
             ))}

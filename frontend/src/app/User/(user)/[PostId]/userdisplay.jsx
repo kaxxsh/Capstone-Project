@@ -73,7 +73,7 @@ const UserDisplay = ({ user }) => {
             alt={`${data.name}'s profile`}
             className="w-14 h-14 rounded-full"
           />
-          <div className="ml-3">
+          <div className="ml-3 flex flex-col justify-center">
             <div className="font-bold">{data.name}</div>
             <div className="text-gray-500 text-sm">@{data.userName}</div>
           </div>

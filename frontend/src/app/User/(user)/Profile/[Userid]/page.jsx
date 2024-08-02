@@ -1,7 +1,7 @@
 "use client";
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useEffect, useState, useCallback, use } from "react";
 import { BASE_URL } from "@/config";
-import UserId from "@/Utils/tokenDecoder";
+import UserIdFromToken from "@/Utils/tokenDecoder";
 import UserProfileModal from "./UserProfileModal";
 import Post from "@/Components/Post/page";
 import PostSkeleton from "@/Components/Post/PostSkeleton";
@@ -14,6 +14,7 @@ const Profile = ({ params }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [posts, setPosts] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [CurrentuserDetails, setCurrentuserDetails] = useState({});
 
   useEffect(() => {
     const fetchPosts = async () => {
@@ -71,8 +72,8 @@ const Profile = ({ params }) => {
 
     const fetchUserId = async () => {
       try {
-        const userId = await UserId();
-        setGetUserId(userId);
+        const tokenid = await UserIdFromToken();
+        setGetUserId(tokenid);
       } catch (error) {
         console.error("Error decoding token:", error);
         setGetUserId(null);
@@ -88,6 +89,29 @@ const Profile = ({ params }) => {
       setIsFollow(data.following.some((follow) => follow.userId === getUserId));
     }
   }, [data, getUserId]);
+  useEffect(() => {
+    const getcurrentUser = async () => {
+      try {
+        const response = await fetch(
+          `${BASE_URL}/api/User/UserId?UserId=${getUserId}`,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            credentials: "include",
+          }
+        );
+        if (response.ok) {
+          const data = await response.json();
+          setCurrentuserDetails(data);
+        }
+      } catch (error) {
+        console.error("Error fetching user data", error);
+      }
+    };
+    getcurrentUser();
+  }, [getUserId]);
 
   const handleFollow = useCallback(
     async (name) => {
@@ -249,10 +273,10 @@ const Profile = ({ params }) => {
                 isRetweet={true}
                 retweetContent={item.retweetContent}
                 retweetedBy={item.retweetedBy}
-                UserDetails={data}
+                UserDetails={CurrentuserDetails}
               />
             ) : (
-              <Post key={item.post.id} post={item.post} UserDetails={data} />
+              <Post key={item.post.id} post={item.post} UserDetails={CurrentuserDetails} />
             )
           )
         )}

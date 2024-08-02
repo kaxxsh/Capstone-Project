@@ -102,7 +102,10 @@ const UserList = ({ data }) => {
       {userData
         .filter((user) => user.id !== loggedInUserId)
         .map((user) => (
-          <div key={user.id} className="flex items-center mb-2 p-2">
+          <div
+            key={user.id}
+            className="flex flex-col sm:flex-row items-center mb-2 p-2"
+          >
             <img
               src={user.profileImage}
               alt={`${user.name}'s avatar`}
@@ -116,7 +119,7 @@ const UserList = ({ data }) => {
               <p className="text-sm text-gray-500">@{user.userName}</p>
             </div>
             <button
-              className="ml-auto bg-gray-100 text-black font-bold px-4 py-1 rounded-full hover:bg-gray-500 transition-colors"
+              className="mt-2 sm:mt-0 ml-auto bg-gray-100 text-black font-bold px-4 py-1 rounded-full hover:bg-gray-500 transition-colors"
               onClick={() =>
                 handleFollowUnfollow(
                   user.userName,

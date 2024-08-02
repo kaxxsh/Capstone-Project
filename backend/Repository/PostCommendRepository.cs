@@ -34,6 +34,7 @@ namespace backend.Repository
                 {
                     UserId = post.UserId,
                     Content = $"{User.UserName} commented on your post.",
+                    PostId = post.PostId
                 };
                 await _notify.CreateNotificationAsync(notification);
                 return entity;
@@ -62,7 +63,8 @@ namespace backend.Repository
                 var notification = new NotifyRequestDto
                 {
                     UserId = post.UserId,
-                    Content = $"deleted a comment on your post."
+                    Content = $"deleted a comment on your post.",
+                    PostId = post.PostId
                 };
 
                 await _notify.CreateNotificationAsync(notification);
@@ -137,7 +139,8 @@ namespace backend.Repository
                 var notification = new NotifyRequestDto
                 {
                     UserId = postComment.UserId,
-                    Content = $"updated a comment on your post."
+                    Content = $"updated a comment on your post.",
+                    PostId = postComment.PostId
                 };
 
                 await _notify.CreateNotificationAsync(notification);

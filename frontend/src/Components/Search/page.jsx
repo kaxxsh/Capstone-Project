@@ -84,19 +84,20 @@ const SearchComponent = () => {
   }, []);
 
   return (
-    <section className="hidden lg:inline">
+    <section className="block lg:inline">
       <div
         className={`flex items-center border ${
           isFocused ? "border-blue-600" : "border-gray-800"
-        } rounded-3xl py-2 px-6 w-80 mt-4`}
+        } rounded-3xl p-2 mt-4`}
       >
         <FaSearch
-          className={`mr-2 ${isFocused ? "text-blue-600" : "text-gray-500"}`}
+          className={`mx-2 ${isFocused ? "text-blue-600" : "text-gray-500"}`}
+          size={14}
         />
         <input
           type="text"
           placeholder="Search"
-          className="border-none outline-none flex-grow p-1 bg-transparent"
+          className="border-none outline-none p-1 bg-transparent"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           onFocus={() => setIsFocused(true)}

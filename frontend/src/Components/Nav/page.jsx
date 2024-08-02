@@ -26,13 +26,14 @@ const Nav = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [userdata, setUserdata] = useState(null);
   const [isPostModelOpen, setPostModelOpen] = useState(false);
+
   const navlist = [
     { Logo: <FaHome size={30} />, Title: "Home", Link: "/User" },
     { Logo: <FaSearch size={30} />, Title: "Explore", Link: "/User/explore" },
     {
       Logo: <IoMdNotifications size={30} />,
       Title: "Notification",
-      Link: "/User/Notification",
+      Link: userdata ? `/User/Notification/${userdata.id}` : "",
     },
     {
       Logo: <BiSolidMessageSquareDots size={30} />,
@@ -94,12 +95,13 @@ const Nav = () => {
 
   return (
     <section>
-      <nav className="relative hidden lg:flex flex-col h-screen text-gray-700 font-mono font-extralight justify-between">
+      {/* Desktop Navigation */}
+      <nav className="hidden lg:flex flex-col h-screen text-gray-700 font-mono font-extralight justify-between">
         <div>
           <div className="h-16 p-2 mb-4">
             <Image src="/logo.jpg" width={45} height={45} alt="Logo" />
           </div>
-          <ul className="w-60 flex flex-col gap-8">
+          <ul className="flex flex-col gap-8">
             {navlist.map((nav, index) => (
               <li key={index} className="flex gap-2 items-center">
                 <Link
@@ -116,10 +118,10 @@ const Nav = () => {
             ))}
           </ul>
         </div>
-        <div className="flex flex-col items-center space-y-4">
+        <div className="flex flex-col items-center space-y-4 p-2">
           <button
             onClick={() => setPostModelOpen(true)}
-            className="flex justify-center items-center text-xl font-bold bg-blue-600 text-white py-3 px-20 rounded-3xl hover:bg-blue-800 transition duration-100"
+            className="flex justify-center items-center text-xl font-bold bg-blue-600 text-white m-3 p-3 px-16 rounded-3xl hover:bg-blue-800 transition duration-100"
           >
             Post
           </button>
@@ -134,7 +136,7 @@ const Nav = () => {
                     <img
                       src={userdata.profileImage}
                       alt="userImage"
-                      className="w-10 h-10 object-cover"
+                      className="w-10 h-10 object-cover rounded-full"
                     />
                   </div>
                   <div className="flex flex-col">
@@ -200,6 +202,7 @@ const Nav = () => {
           </div>
         </div>
       </nav>
+      {/* Mobile Navigation */}
       <nav className="lg:hidden fixed bottom-0 left-0 text-gray-500 right-0 p-2 flex justify-around items-center border-t border-gray-700 bg-black">
         {navlist.map((nav, index) => (
           <Link

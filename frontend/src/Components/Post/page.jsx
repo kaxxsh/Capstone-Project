@@ -161,12 +161,29 @@ const Post = ({
     (retweet) => retweet.userName === currentUser?.userName
   );
 
+  const getTimeSincePost = () => {
+    const currentDate = new Date();
+    const postDate = new Date(dateCreated);
+    const timeDiff = Math.abs(currentDate - postDate);
+    const minutes = Math.floor(timeDiff / (1000 * 60));
+    const hours = Math.floor(timeDiff / (1000 * 60 * 60));
+    const days = Math.floor(timeDiff / (1000 * 60 * 60 * 24));
+
+    if (minutes < 60) {
+      return `${minutes} m ago`;
+    } else if (hours < 24) {
+      return `${hours} h ago`;
+    } else {
+      return `${days} d ago`;
+    }
+  };
+
   return (
     <>
-      <section className="bg-[0b0c0c] text-[#E1E8ED] rounded-lg shadow-lg mb-4">
+      <section className="bg-[0b0c0c] text-[#E1E8ED] mb-4">
         {isRetweet && (
-          <div className="p-2">
-            <span className="text-[#8899A6]">
+          <div className=" ml-4">
+            <span className="text-[#8899A6] text-sm">
               Retweeted by <strong>@{retweetedBy}</strong>
             </span>
           </div>
@@ -184,12 +201,14 @@ const Post = ({
               />
             </div>
             <div className="flex-grow">
-              <div className="flex items-center mb-1">
-                <div className="font-bold text-lg mr-2">{name}</div>
-                <div className="text-[#8899A6]">@{userName}</div>
+              <div className="flex mb-1">
+                <div className="">
+                  <div className=" mr-2">{name}</div>
+                  <div className="text-[#8899A6] text-sm">@{userName}</div>
+                </div>
                 <div className="mx-2 text-[#8899A6]">•</div>
-                <div className="text-[#8899A6]">
-                  {new Date(dateCreated).toLocaleTimeString()}
+                <div className="text-[#8899A6] text-xs pt-1">
+                  {getTimeSincePost()}
                 </div>
               </div>
               <div>{content}</div>

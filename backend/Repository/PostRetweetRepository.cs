@@ -39,7 +39,8 @@ namespace backend.Repository
                 var notification = new NotifyRequestDto
                 {
                     Content = "Retweeted your post",
-                    UserId = post.UserId
+                    UserId = post.UserId,
+                    PostId = post.PostId
                 };
 
                 await _notify.CreateNotificationAsync(notification);
@@ -69,7 +70,8 @@ namespace backend.Repository
                 var notification = new NotifyRequestDto
                 {
                     Content = "Unretweeted your post",
-                    UserId = post.UserId
+                    UserId = post.UserId,
+                    PostId = post.PostId
                 };
 
                 await _notify.CreateNotificationAsync(notification);
@@ -185,7 +187,8 @@ namespace backend.Repository
                 var notification = new NotifyRequestDto
                 {
                     Content = "Updated your retweet",
-                    UserId = postRetweet.UserId
+                    UserId = postRetweet.UserId,
+                    PostId = postRetweet.PostId
                 };
 
                 await _notify.CreateNotificationAsync(notification);
