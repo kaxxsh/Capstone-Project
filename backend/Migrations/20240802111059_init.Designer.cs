@@ -12,8 +12,8 @@ using backend.Context;
 namespace backend.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240801114415_edit notify")]
-    partial class editnotify
+    [Migration("20240802111059_init")]
+    partial class init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

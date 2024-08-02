@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace backend.Migrations
 {
     /// <inheritdoc />
-    public partial class addingusers : Migration
+    public partial class init : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -76,7 +76,8 @@ namespace backend.Migrations
                 columns: table => new
                 {
                     HashtagId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Tag = table.Column<string>(type: "nvarchar(450)", nullable: false)
+                    Tag = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Count = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -198,7 +199,8 @@ namespace backend.Migrations
                     DateCreated = table.Column<DateTime>(type: "datetime2", nullable: false),
                     IsRead = table.Column<bool>(type: "bit", nullable: false),
                     FromUserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false)
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    PostId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
                 },
                 constraints: table =>
                 {

@@ -63,7 +63,7 @@ namespace backend.Repository
                     var notification = new NotifyRequestDto
                     {
                         UserId = post.UserId,
-                        Content = "You unliked a post.",
+                        Content = $"You unliked a post.",
                         PostId = postId
                     };
                     await _services.CreateNotificationAsync(notification);

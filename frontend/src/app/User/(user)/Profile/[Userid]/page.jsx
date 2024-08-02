@@ -5,6 +5,7 @@ import UserIdFromToken from "@/Utils/tokenDecoder";
 import UserProfileModal from "./UserProfileModal";
 import Post from "@/Components/Post/page";
 import PostSkeleton from "@/Components/Post/PostSkeleton";
+import { IoArrowBack } from "react-icons/io5";
 
 const Profile = ({ params }) => {
   const [data, setData] = useState(null);
@@ -188,6 +189,17 @@ const Profile = ({ params }) => {
 
   return (
     <section className="bg-black text-white pb-6 border-b border-gray-800">
+      <div className="p-1 m-2 text-2xl font-bold flex item-center gap-2">
+        <div className="">
+          <IoArrowBack
+            className="pt-1"
+            onClick={() => {
+              history.back();
+            }}
+          />
+        </div>
+        Profile
+      </div>
       <div className="relative">
         <div className="h-28 bg-gray-800"></div>
         <div className="absolute -bottom-16 left-6">
@@ -276,7 +288,11 @@ const Profile = ({ params }) => {
                 UserDetails={CurrentuserDetails}
               />
             ) : (
-              <Post key={item.post.id} post={item.post} UserDetails={CurrentuserDetails} />
+              <Post
+                key={item.post.id}
+                post={item.post}
+                UserDetails={CurrentuserDetails}
+              />
             )
           )
         )}

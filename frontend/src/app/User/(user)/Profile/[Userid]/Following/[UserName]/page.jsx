@@ -1,6 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { BASE_URL } from "@/config";
+import { IoArrowBack } from "react-icons/io5";
 
 const FollowersSkeleton = () => (
   <div className="flex items-center justify-between m-6 p-3 animate-pulse">
@@ -79,7 +80,17 @@ const Following = ({ params }) => {
 
   return (
     <section className="p-6 max-w-xl mx-auto">
-      <h2 className="text-2xl font-bold mb-4">Following</h2>
+      <div className="p-1 m-2 text-2xl font-bold flex item-center gap-2">
+        <div className="">
+          <IoArrowBack
+            className="pt-1"
+            onClick={() => {
+              history.back();
+            }}
+          />
+        </div>
+        Following
+      </div>
       {loading ? (
         <>
           <FollowersSkeleton />

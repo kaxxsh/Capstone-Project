@@ -25,7 +25,7 @@ const UserDisplay = ({ user }) => {
       const fetchData = async () => {
         try {
           const response = await fetch(
-            `${BASE_URL}/api/User/UserId?UserId=${user}`
+            `${BASE_URL}/api/User/UserId?UserId=${user.item.id}`
           );
           const result = await response.json();
           setData(result);
@@ -65,9 +65,14 @@ const UserDisplay = ({ user }) => {
     }
   };
   return (
-    <div className="border-b border-gray-700 py-4 px-8">
+    <div className=" py-4 px-8">
       <div className="flex items-center justify-between">
-        <div className="flex gap-2">
+        <div
+          className="flex gap-2"
+          onClick={() => {
+            window.location.href = `/User/Profile/${data.id}`;
+          }}
+        >
           <img
             src={data.profileImage}
             alt={`${data.name}'s profile`}
@@ -78,13 +83,25 @@ const UserDisplay = ({ user }) => {
             <div className="text-gray-500 text-sm">@{data.userName}</div>
           </div>
         </div>
-        <button
-          className="text-black bg-white p-3 px-8 rounded-3xl font-bold"
-          aria-label={hasFollow ? "Unfollow" : "Follow"}
-          onClick={() => handleFollowRequest(data.userName)}
-        >
-          {hasFollow ? "Unfollow" : "Follow"}
-        </button>
+        {loggedInUserId !== data.id ? (
+          <button
+            className="text-black bg-white p-3 px-8 rounded-3xl font-bold"
+            aria-label={hasFollow ? "Unfollow" : "Follow"}
+            onClick={() => handleFollowRequest(data.userName)}
+          >
+            {hasFollow ? "Unfollow" : "Follow"}
+          </button>
+        ) : (
+          <button
+            className="text-black bg-white p-3 px-8 rounded-3xl font-bold"
+            aria-label={hasFollow ? "Unfollow" : "Follow"}
+            onClick={() => {
+              window.location.href = `/User/Profile/${data.id}`;
+            }}
+          >
+            Profile
+          </button>
+        )}
       </div>
     </div>
   );

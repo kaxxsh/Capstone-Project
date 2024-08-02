@@ -33,13 +33,27 @@ body {
   }
 }
 
-
 @layer utilities {
-      .no-scrollbar::-webkit-scrollbar {
-          display: none;
-      }
-      .no-scrollbar {
-          -ms-overflow-style: none; 
-          scrollbar-width: none; 
-    }
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
   }
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+}
+
+.skeleton {
+  background-color: #e2e8f0;
+  animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.4;
+  }
+}

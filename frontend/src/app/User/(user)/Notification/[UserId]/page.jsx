@@ -1,6 +1,7 @@
 "use client";
 import { BASE_URL } from "@/config";
 import { useEffect, useState } from "react";
+import { IoArrowBack } from "react-icons/io5";
 
 const Notification = ({ params }) => {
   const [data, setData] = useState([]);
@@ -32,7 +33,17 @@ const Notification = ({ params }) => {
 
   return (
     <section className="w-full text-white rounded-lg shadow-md">
-      <h1 className="text-2xl font-bold mb-4 p-4">Notifications</h1>
+      <div className="p-1 m-2 text-2xl font-bold flex item-center gap-2">
+        <div className="">
+          <IoArrowBack
+            className="pt-1"
+            onClick={() => {
+              history.back();
+            }}
+          />
+        </div>
+        Notifications
+      </div>
       <div className="">
         {loading ? (
           <div>

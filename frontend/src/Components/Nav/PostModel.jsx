@@ -7,16 +7,18 @@ import GifPicker from "gif-picker-react";
 import UserId from "@/Utils/tokenDecoder";
 import { BASE_URL } from "@/config";
 
-const PostModel = ({ onClose }) => {
-  const [inputValue, setInputValue] = useState("");
-  const [hashtags, setHashtags] = useState([]);
+const PostModel = ({ onClose, post }) => {
+  const [inputValue, setInputValue] = useState(post ? post.content : "");
+  const [hashtags, setHashtags] = useState(post ? post.hashtags : []);
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const [showGifPicker, setShowGifPicker] = useState(false);
-  const [selectedGif, setSelectedGif] = useState(null);
+  const [selectedGif, setSelectedGif] = useState(post ? post.image : null);
   const [selectedMedia, setSelectedMedia] = useState(null);
   const [loggedInUserId, setLoggedInUserId] = useState("");
   const [data, setData] = useState({});
   const [isLoading, setIsLoading] = useState(true);
+
+  console.log(post);
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -107,15 +109,23 @@ const PostModel = ({ onClose }) => {
     let imageUrl = "";
     if (selectedMedia) {
       imageUrl = await handleCloudinaryUpload();
+    } else if (selectedGif) {
+      imageUrl = selectedGif;
     }
+
     const postData = {
-      Content: inputValue,
-      Image: imageUrl || selectedGif,
+      content: inputValue,
+      image: imageUrl,
       hashtags: hashtags,
     };
 
-    const response = await fetch(`${BASE_URL}/api/PostFeed`, {
-      method: "POST",
+    const endpoint = post
+      ? `${BASE_URL}/api/PostFeed/${post.postId}`
+      : `${BASE_URL}/api/PostFeed`;
+    const method = post ? "PUT" : "POST";
+
+    const response = await fetch(endpoint, {
+      method: method,
       headers: {
         "Content-Type": "application/json",
       },
@@ -124,13 +134,13 @@ const PostModel = ({ onClose }) => {
     });
 
     if (response.ok) {
-      console.log("Post created successfully");
+      console.log(`Post ${post ? "updated" : "created"} successfully`);
       setInputValue("");
       setSelectedGif(null);
       setSelectedMedia(null);
       onClose(); // Close the modal after posting
     } else {
-      console.error("Failed to create post");
+      console.error(`Failed to ${post ? "update" : "create"} post`);
     }
   };
 
@@ -217,7 +227,7 @@ const PostModel = ({ onClose }) => {
                 className="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-2xl transition-colors"
                 onClick={handlePost}
               >
-                Post
+                {post ? "Update" : "Post"}
               </button>
             </div>
           </div>

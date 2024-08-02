@@ -81,17 +81,17 @@ const PostPage = ({ params }) => {
     <section className="">
       <div className="p-1 m-2 text-2xl font-bold flex item-center gap-2">
         <div className="">
-          <IoArrowBack className="pt-1" />
+          <IoArrowBack className="pt-1" onClick={() => {history.back()}} />
         </div>
         Post
       </div>
       <div className="pb-4 mb-4 border-b border-gray-700">
         <Userdisplay user={data.userId} />
-        <div className="mt-3 ml-3 pl-3">
+        <div className="mt-3 ml-6 pl-3 text-gray-400">
           <p>{data.content}</p>
         </div>
         {data.image && (
-          <div className="flex items-center justify-center mt-4 p-6">
+          <div className="flex justify-center mt-4 p-6">
             <img
               src={data.image}
               alt="Post content"

@@ -9,7 +9,7 @@ export default function Home() {
     <section className="min-h-screen flex flex-col items-center justify-center relative bg-gradient-to-r from-slate-900 to-slate-700">
       <div className="my-8">
         <span className="w-full">
-          <Image src="/Logo.png" alt="Kratos" width={400} height={95} />
+          <Image src="/logo.png" alt="Kratos" width={400} height={95} />
         </span>
       </div>
       <TypeAnimation

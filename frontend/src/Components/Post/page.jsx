@@ -1,9 +1,11 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { FaHeart } from "react-icons/fa";
 import { BiSolidMessageSquare } from "react-icons/bi";
 import { AiOutlineRetweet } from "react-icons/ai";
 import { FiShare } from "react-icons/fi";
 import { BASE_URL } from "@/config";
+import Link from "next/link";
+import PostModel from "@/Components/Nav/PostModel";
 
 const Post = ({
   post,
@@ -36,10 +38,34 @@ const Post = ({
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [commentContent, setCommentContent] = useState("");
   const [currentUser, setcurrentUser] = useState({});
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const dropdownRef = useRef(null);
+  const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
     setcurrentUser(UserDetails);
   }, [UserDetails]);
+
+  const handleOpenModal = () => {
+    setShowModal(true);
+  };
+
+  const handleCloseModal = () => {
+    setShowModal(false);
+  };
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setDropdownOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [dropdownRef]);
 
   const handleLike = async () => {
     try {
@@ -170,19 +196,43 @@ const Post = ({
     const days = Math.floor(timeDiff / (1000 * 60 * 60 * 24));
 
     if (minutes < 60) {
-      return `${minutes} m ago`;
+      return `${minutes}m ago`;
     } else if (hours < 24) {
-      return `${hours} h ago`;
+      return `${hours}h ago`;
     } else {
-      return `${days} d ago`;
+      return `${days}d ago`;
+    }
+  };
+
+  const toggleDropdown = () => {
+    setDropdownOpen(!dropdownOpen);
+  };
+
+  const handledelete = async (postId) => {
+    try {
+      const response = await fetch(`${BASE_URL}/api/PostFeed/${postId}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+      });
+
+      if (response.ok) {
+        window.location.reload();
+      } else {
+        console.error("Post deletion failed");
+      }
+    } catch (error) {
+      console.error("An error occurred during post deletion:", error);
     }
   };
 
   return (
     <>
-      <section className="bg-[0b0c0c] text-[#E1E8ED] mb-4">
+      <section className=" text-[#E1E8ED] mb-4">
         {isRetweet && (
-          <div className=" ml-4">
+          <div className="ml-4">
             <span className="text-[#8899A6] text-sm">
               Retweeted by <strong>@{retweetedBy}</strong>
             </span>
@@ -203,7 +253,7 @@ const Post = ({
             <div className="flex-grow">
               <div className="flex mb-1">
                 <div className="">
-                  <div className=" mr-2">{name}</div>
+                  <div className="mr-2">{name}</div>
                   <div className="text-[#8899A6] text-sm">@{userName}</div>
                 </div>
                 <div className="mx-2 text-[#8899A6]">•</div>
@@ -252,36 +302,78 @@ const Post = ({
             <FaHeart size={20} />
             <span>{likes}</span>
           </button>
-          <button
-            className="flex items-center space-x-2 hover:text-[#1DA1F2]"
-            onClick={handleShare}
-          >
-            <FiShare size={20} />
-          </button>
+          <div className="flex gap-3">
+            <button
+              className="flex items-center space-x-2 hover:text-[#1DA1F2]"
+              onClick={handleShare}
+            >
+              <FiShare size={16} />
+            </button>
+            {currentUser?.userName === userName && (
+              <button className="text-xs" onClick={toggleDropdown}>
+                ...
+              </button>
+            )}
+            {retweetedBy === userName && (
+              <button className="text-xs" onClick={toggleDropdown}>
+                ...
+              </button>
+            )}
+          </div>
         </div>
       </section>
 
-      {isDialogOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-80">
-          <div className="rounded-lg shadow-lg p-4 w-1/3 border border-[#38444D] bg-[#15202B]">
-            <div className="text-2xl font-semibold mb-4 text-[#E1E8ED]">
-              Add a comment
+      <div className="relative" ref={dropdownRef}>
+        {dropdownOpen && (
+          <div
+            id="dropdownDotsHorizontal"
+            className="z-50 absolute bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 dark:divide-gray-600 bottom-14 right-20"
+          >
+            <ul
+              className="py-2 text-sm text-gray-700 dark:text-gray-200"
+              aria-labelledby="dropdownMenuIconHorizontalButton"
+            >
+              <li>
+                <Link
+                  href="#"
+                  className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+                  onClick={() => handleOpenModal()}
+                >
+                  Update Post
+                </Link>
+              </li>
+            </ul>
+            <div className="py-2">
+              <Link
+                href="#"
+                className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
+                onClick={() => handledelete(postId)}
+              >
+                Delete
+              </Link>
             </div>
+          </div>
+        )}
+      </div>
+      {isDialogOpen && (
+        <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
+          <div className="bg-[#1da1f2] p-6 rounded-lg shadow-lg w-96">
+            <h2 className="text-2xl mb-4">Add Comment</h2>
             <textarea
-              className="w-full p-2 mb-4 border rounded-lg bg-[#15202B] text-[#E1E8ED] border-[#38444D]"
-              placeholder="Write your comment here..."
+              className="w-full p-2 mb-4 border border-gray-300 rounded-lg"
               rows="4"
+              value={commentContent}
               onChange={(e) => setCommentContent(e.target.value)}
-            />
+            ></textarea>
             <div className="flex justify-end">
               <button
-                className="px-4 py-2 bg-[#E0245E] text-white rounded-lg mr-2"
+                className="px-4 py-2 bg-[#0b0c0c] text-white rounded-lg mr-2"
                 onClick={toggleDialog}
               >
                 Cancel
               </button>
               <button
-                className="px-4 py-2 bg-[#17BF63] text-white rounded-lg"
+                className="px-4 py-2 bg-[#1da1f2] text-white rounded-lg"
                 onClick={() => {
                   handleComment(commentContent);
                   toggleDialog();
@@ -293,6 +385,7 @@ const Post = ({
           </div>
         </div>
       )}
+      {showModal && <PostModel onClose={handleCloseModal} post={post} />}
     </>
   );
 };
