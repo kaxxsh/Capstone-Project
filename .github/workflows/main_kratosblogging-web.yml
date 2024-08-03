@@ -30,7 +30,9 @@ jobs:
           yarn build
 
       - name: Zip artifact for deployment
-        run: zip -r standalone.zip . -i .next/standalone
+        run: |
+          cd frontend/.next
+          zip -r ../../standalone.zip standalone
         
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
