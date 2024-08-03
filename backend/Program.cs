@@ -23,13 +23,15 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("CorsPolicy", policy =>
-    {
-        policy.AllowAnyHeader()
-              .AllowAnyMethod()
-              .AllowCredentials();
-    });
+    options.AddPolicy("CorsPolicy",
+        builder =>
+        {
+            builder.AllowAnyOrigin()  
+                   .AllowAnyHeader()  
+                   .AllowAnyMethod();
+        });
 });
+
 
 builder.Services.AddAutoMapper(typeof(AutoMappingProfile));
 
