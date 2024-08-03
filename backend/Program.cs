@@ -24,16 +24,13 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("CorsPolicy", policy =>
-{
-    policy.WithOrigins("https://capstone-project-git-main-gangster-s-projects.vercel.app")
-          .AllowAnyHeader()
-          .AllowAnyMethod()
-          .AllowCredentials();
+    {
+        policy.WithOrigins("https://capstone-project-git-main-gangster-s-projects.vercel.app")
+              .AllowAnyHeader()
+              .AllowAnyMethod()
+              .AllowCredentials();
+    });
 });
-
-});
-
-
 
 builder.Services.AddAutoMapper(typeof(AutoMappingProfile));
 
@@ -80,7 +77,6 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     });
 
 builder.Services.AddHttpContextAccessor();
-
 
 builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<IAuthServices, AuthService>();
