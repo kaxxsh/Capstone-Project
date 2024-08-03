@@ -1,8 +1,8 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import Post from "@/components/Post/page";
+import Post from "@/components/Post/page.jsx";
 import PostSkeleton from "@/Components/Post/PostSkeleton";
-import AddPost from "@/components/Post/addPost";
+import AddPost from "@/components/Post/addPost.jsx";
 import { BASE_URL } from "@/config";
 import UserId from "@/Utils/tokenDecoder";
 
