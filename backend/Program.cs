@@ -25,7 +25,7 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("CorsPolicy", policy =>
     {
-        policy.AllowAnyHeader().AllowAnyMethod().WithOrigins("https://localhost:3000").AllowCredentials();
+        policy.AllowAnyHeader().AllowAnyMethod().WithOrigins("https://capstone-project-xi-vert.vercel.app").AllowCredentials();
     });
 });
 
