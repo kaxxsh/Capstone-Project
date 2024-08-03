@@ -25,8 +25,7 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("CorsPolicy", policy =>
     {
-        policy.WithOrigins("https://capstone-project-git-main-gangster-s-projects.vercel.app")
-              .AllowAnyHeader()
+        policy.AllowAnyHeader()
               .AllowAnyMethod()
               .AllowCredentials();
     });
