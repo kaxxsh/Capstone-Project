@@ -24,9 +24,13 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("CorsPolicy", policy =>
-    {
-        policy.AllowAnyHeader().AllowAnyMethod().WithOrigins("https://capstone-project-git-main-gangster-s-projects.vercel.app").AllowCredentials();
-    });
+{
+    policy.WithOrigins("https://capstone-project-git-main-gangster-s-projects.vercel.app")
+          .AllowAnyHeader()
+          .AllowAnyMethod()
+          .AllowCredentials();
+});
+
 });
 
 
