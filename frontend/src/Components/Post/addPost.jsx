@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import { MdPermMedia } from "react-icons/md";
 import { HiMiniGif } from "react-icons/hi2";
-import { BsEmojiGrinFill } from "react-icons/bs";
 import GifPicker from "gif-picker-react";
 import UserId from "@/Utils/tokenDecoder";
 import { BASE_URL } from "@/config";
