@@ -29,7 +29,7 @@ const HashtagList = ({ data }) => {
       ) : (
         isVisible && (
           <div className="border border-gray-800 mt-8 p-4 rounded-xl">
-            <h1 className="text-xl font-bold">What's happening</h1>
+            <h1 className="text-xl font-bold">Whats happening</h1>
             <div className="flex flex-col space-y-4 mt-4">
               {data.map((tag) => (
                 <div

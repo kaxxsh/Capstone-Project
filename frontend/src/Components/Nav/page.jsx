@@ -11,6 +11,7 @@ import { BASE_URL } from "@/config";
 import UserId from "@/Utils/tokenDecoder";
 import PostModel from "./PostModel";
 
+
 const Skeleton = () => (
   <div className="flex flex-grow items-center gap-2 animate-pulse">
     <div className="rounded-full bg-gray-300 h-10 w-10"></div>

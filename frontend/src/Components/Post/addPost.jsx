@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 import { MdPermMedia } from "react-icons/md";
 import { HiMiniGif } from "react-icons/hi2";
 import { BsEmojiGrinFill } from "react-icons/bs";
-import Picker from "@emoji-mart/react";
 import GifPicker from "gif-picker-react";
 import UserId from "@/Utils/tokenDecoder";
 import { BASE_URL } from "@/config";
@@ -168,7 +167,7 @@ const AddPost = () => {
                 value={inputValue}
                 onChange={handleInputChange}
               />
-              {showEmojiPicker && <Picker onEmojiSelect={handleEmojiSelect} />}
+              {/* {showEmojiPicker && <Picker onEmojiSelect={handleEmojiSelect} />} */}
               {showGifPicker && (
                 <GifPicker
                   tenorApiKey={process.env.NEXT_PUBLIC_TENOR_API_KEY}
@@ -199,11 +198,11 @@ const AddPost = () => {
                   onClick={() => setShowGifPicker(!showGifPicker)}
                   fill="#2196F3"
                 />
-                <BsEmojiGrinFill
+                {/* <BsEmojiGrinFill
                   size={24}
                   onClick={() => setShowEmojiPicker(!showEmojiPicker)}
                   fill="#2196F3"
-                />
+                /> */}
               </div>
               <div>
                 <button
