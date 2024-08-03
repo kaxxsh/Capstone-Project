@@ -3,10 +3,12 @@ using Microsoft.AspNetCore.Mvc;
 using backend.Interface.Services;
 using backend.Model.Dtos.Auth;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Cors;
 
 namespace backend.Controllers
 {
     [Route("api/[controller]")]
+    [EnableCors("CorsPolicy")]
     [ApiController]
     public class AuthController : ControllerBase
     {
